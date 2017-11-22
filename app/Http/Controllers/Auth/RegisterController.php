@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Mymovielist\Http\Controllers\Auth;
 
-use App\User;
-use App\Http\Controllers\Controller;
+use Mymovielist\User;
+use Mymovielist\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -58,7 +58,7 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return \App\User
+     * @return \Mymovielist\User
      */
     protected function create(array $data)
     {
