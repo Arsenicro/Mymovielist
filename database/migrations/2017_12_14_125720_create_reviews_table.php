@@ -17,7 +17,6 @@ class CreateReviewsTable extends Migration
             $table->increments('id');
             $table->text('text');
             $table->integer('score');
-            $table->integer('helped');
             $table->timestamps();
         });
     }
