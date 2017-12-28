@@ -67,7 +67,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => Mymovielist\User::class,
+            'model' => Mymovielist\SQL\SQLUser::class,
         ],
 
         // 'users' => [

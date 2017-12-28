@@ -30,7 +30,7 @@ return [
     ],
 
     'stripe' => [
-        'model' => Mymovielist\User::class,
+        'model' => Mymovielist\SQL\SQLUser::class,
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],

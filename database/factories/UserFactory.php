@@ -13,7 +13,7 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(Mymovielist\User::class, function (Faker $faker) {
+$factory->define(Mymovielist\SQL\SQLUser::class, function (Faker $faker) {
     static $password;
 
     return [

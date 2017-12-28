@@ -1,14 +1,15 @@
 <?php
 
-namespace Mymovielist;
+namespace Mymovielist\SQL;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class SQLUser extends Authenticatable
 {
     use Notifiable;
 
+    protected $table = 'users';
     protected $connection = 'mysql';
 
     /**
