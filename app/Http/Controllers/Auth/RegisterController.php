@@ -2,10 +2,10 @@
 
 namespace Mymovielist\Http\Controllers\Auth;
 
-use Mymovielist\SQL\SQLUser;
 use Mymovielist\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Mymovielist\User;
 
 class RegisterController extends Controller
 {
@@ -30,7 +30,7 @@ class RegisterController extends Controller
 
     protected function create(array $data)
     {
-        return SQLUser::create([
+        return User::create([
             'login' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
