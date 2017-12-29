@@ -58,4 +58,17 @@ class User
 
     }
 
+    public static function follow($login1,$login2)
+    {
+        $user1 = NEO4JUser::where('login', $login1)->first();
+        $user2 = NEO4JUser::where('login', $login2)->first();
+
+        $user1->followers()->save($user2,["since"=>"2137"]);
+    }
+
+    public static function getFollowers($login)
+    {
+        return NEO4JUser::where('login', $login)->first()->followers()->get();
+    }
+
 }

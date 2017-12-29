@@ -13,4 +13,9 @@ class NEO4JUser extends NeoEloquent
     public $timestamps = false;
 
     protected $fillable = ['login'];
+
+    public function followers()
+    {
+        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JUser', 'follows');
+    }
 }
