@@ -16,6 +16,11 @@ class NEO4JUser extends NeoEloquent
 
     public function followers()
     {
-        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JUser', 'follows');
+        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JUser', 'FOLLOWS');
+    }
+
+    public function wroteReview()
+    {
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JReview', 'REVIEW');
     }
 }

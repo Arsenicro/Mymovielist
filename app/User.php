@@ -13,24 +13,14 @@ class User
     {
         NEO4JUser::create(['login' => $data['login']]);
 
-        return SQLUser::create(
-            [
-                'login'    => $data['login'],
-                'email'    => $data['email'],
-                'password' => $data['password'],
-                'access'   => 'u'
-            ]
-        );
-
-
+        return SQLUser::create($data);
     }
 
-    public static function setAttribute($id,$attribute,$value)
+    public static function setAttribute($id, $attribute, $value)
     {
         $user = SQLUser::where('id', $id);
 
-        switch ($attribute)
-        {
+        switch ($attribute) {
             case "name":
                 $user->update(['name' => $value]);
                 break;
@@ -58,12 +48,12 @@ class User
 
     }
 
-    public static function follow($login1,$login2)
+    public static function follow($login1, $login2)
     {
         $user1 = NEO4JUser::where('login', $login1)->first();
         $user2 = NEO4JUser::where('login', $login2)->first();
 
-        $user1->followers()->save($user2,["since"=>"2137"]);
+        $user1->followers()->save($user2, ["since" => "2137"]);
     }
 
     public static function getFollowers($login)
@@ -71,4 +61,8 @@ class User
         return NEO4JUser::where('login', $login)->first()->followers()->get();
     }
 
+    public static function getNeo4jUser($login)
+    {
+        return NEO4JUser::where('login', $login)->first();
+    }
 }
