@@ -22,4 +22,9 @@ class Movie
     {
         return NEO4JMovie::where('mid', $mid)->first();
     }
+
+    public static function getGenres($mid)
+    {
+        return NEO4JMovie::where('mid',$mid)->first()->isGenre()->get();
+    }
 }

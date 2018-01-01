@@ -14,4 +14,24 @@ class NEO4JPerson extends NeoEloquent
 
     protected $fillable = ['pid'];
 
+    public function hasFan()
+    {
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JUser', 'FAN');
+    }
+
+    public function isDirector()
+    {
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JMovie', 'DIRECTED');
+    }
+
+    public function isWriter()
+    {
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JMovie', 'WROTE');
+    }
+
+    public function isStar()
+    {
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JMovie', 'STAR');
+    }
+
 }

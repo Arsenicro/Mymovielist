@@ -18,4 +18,9 @@ class Genre
     {
         return NEO4JGenre::where('name', $name)->first();
     }
+
+    public static function getAllMovies($name)
+    {
+        return NEO4JGenre::where('name', $name)->first()->movie()->get();
+    }
 }

@@ -23,4 +23,24 @@ class NEO4JUser extends NeoEloquent
     {
         return $this->hasMany('Mymovielist\NEO4J\NEO4JReview', 'REVIEW');
     }
+
+    public function isFan()
+    {
+        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JPerson', 'FAN');
+    }
+
+    public function like()
+    {
+        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JMovie', 'LIKE');
+    }
+
+    public function doesNotLike()
+    {
+        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JMovie', 'DOES_NOT_LIKE');
+    }
+
+    public function score()
+    {
+        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JMovie', 'SCORED');
+    }
 }
