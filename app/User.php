@@ -21,6 +21,23 @@ class User
         return NEO4JUser::where('login', $login)->first();
     }
 
+    public static function getSqlUser($login)
+    {
+        return SQLUser::where('login', $login)->first();
+    }
+
+    public static function getUserInfo($login, array $columns = null)
+    {
+        return User::getSqlUser($login)->get($columns)->first();
+    }
+
+    public static function getUsersInfo($columns = null)
+    {
+        if($columns != null)
+            return SQLUser::all($columns);
+        return SQLUser::all();
+    }
+
     public static function setAttribute($id, $attribute, $value)
     {
         $user = SQLUser::where('id', $id)->first();

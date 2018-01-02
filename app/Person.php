@@ -20,6 +20,23 @@ class Person
         return NEO4JPerson::where('pid', $pid)->first();
     }
 
+    public static function getSqlPerson($pid)
+    {
+        return SQLPerson::where('id', $pid)->first();
+    }
+
+    public static function getPersonInfo($pid, array $columns = null)
+    {
+        return Person::getSqlPerson($pid)->get($columns)->first();
+    }
+
+    public static function getPersonsInfo($columns = null)
+    {
+        if($columns != null)
+            return SQLPerson::all($columns);
+        return SQLPerson::all();
+    }
+
     public static function getFans($pid)
     {
         return Person::getNeo4jPerson($pid)->hasFan()->get();

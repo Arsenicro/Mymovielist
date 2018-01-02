@@ -27,6 +27,23 @@ class Review
         return $sqlReview->id;
     }
 
+    public static function getSqlReview($rid)
+    {
+        return SQLReview::where('id', $rid)->first();
+    }
+
+    public static function getReviewInfo($rid, array $columns = null)
+    {
+        return Review::getSqlReview($rid)->get($columns)->first();
+    }
+
+    public static function getReviewsInfo($columns = null)
+    {
+        if($columns != null)
+            return SQLReview::all($columns);
+        return SQLReview::all();
+    }
+
     public static function getNeo4jReview($rid)
     {
         return NEO4JReview::where('rid', $rid)->first();

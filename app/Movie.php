@@ -23,6 +23,24 @@ class Movie
         return NEO4JMovie::where('mid', $mid)->first();
     }
 
+    public static function getSqlMovie($mid)
+    {
+        return SQLMovie::where('id', $mid)->first();
+    }
+
+    public static function getMovieInfo($mid, array $columns = null)
+    {
+        return Movie::getSqlMovie($mid)->get($columns)->first();
+    }
+
+    public static function getMoviesInfo($columns = null)
+    {
+        if ($columns != null) {
+            return SQLMovie::all($columns);
+        }
+        return SQLMovie::all();
+    }
+
     public static function getAvgScore($mid)
     {
         $movie          = Movie::getNeo4jMovie($mid);
@@ -59,6 +77,18 @@ class Movie
         $movie->number_of_scores = $numberOfScores;
         $movie->score            = $newScore;
         $movie->save();
+    }
+
+    public static function avgScore($mid)
+    {
+        $movie          = Movie::getNeo4jMovie($mid);
+        $numberOfScores = $movie->number_of_scores;
+        $totalScore     = $movie->score;
+
+        if($numberOfScores == 0)
+            return null;
+
+        return $totalScore / $numberOfScores;
     }
 
     public static function getUserScore($login, $mid)
