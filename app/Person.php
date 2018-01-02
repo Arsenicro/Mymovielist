@@ -2,7 +2,6 @@
 
 namespace Mymovielist;
 
-
 use Mymovielist\NEO4J\NEO4JPerson;
 use Mymovielist\SQL\SQLPerson;
 

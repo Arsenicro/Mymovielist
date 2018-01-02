@@ -74,28 +74,28 @@ class Movie
         return Movie::getNeo4jMovie($mid)->review()->get();
     }
 
-    public static function directedBy($mid,$pid)
+    public static function directedBy($mid, $pid)
     {
-        $movie = Movie::getNeo4jMovie($mid);
+        $movie  = Movie::getNeo4jMovie($mid);
         $person = Person::getNeo4jPerson($pid);
 
         $movie->hasDirectors()->save($person);
     }
 
-    public static function wroteBy($mid,$pid)
+    public static function wroteBy($mid, $pid)
     {
-        $movie = Movie::getNeo4jMovie($mid);
+        $movie  = Movie::getNeo4jMovie($mid);
         $person = Person::getNeo4jPerson($pid);
 
         $movie->hasWriters()->save($person);
     }
 
-    public static function newStar($mid,$pid,$role)
+    public static function newStar($mid, $pid, $role)
     {
-        $movie = Movie::getNeo4jMovie($mid);
+        $movie  = Movie::getNeo4jMovie($mid);
         $person = Person::getNeo4jPerson($pid);
 
-        $movie->hasStars()->save($person,['role' => $role]);
+        $movie->hasStars()->save($person, ['role' => $role]);
     }
 
     public static function getStars($mid)

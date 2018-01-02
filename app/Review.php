@@ -2,7 +2,6 @@
 
 namespace Mymovielist;
 
-
 use Mymovielist\NEO4J\NEO4JReview;
 use Mymovielist\SQL\SQLReview;
 
@@ -30,7 +29,7 @@ class Review
 
     public static function getNeo4jReview($rid)
     {
-        return NEO4JReview::where('rid',$rid)->first();
+        return NEO4JReview::where('rid', $rid)->first();
     }
 
     public static function getAuthor($rid)
