@@ -21,12 +21,12 @@ class NEO4JUser extends NeoEloquent
 
     public function wroteReview()
     {
-        return $this->hasMany('Mymovielist\NEO4J\NEO4JReview', 'REVIEW');
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JReview', 'WROTE');
     }
 
     public function isFan()
     {
-        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JPerson', 'FAN');
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JPerson', 'FAN');
     }
 
     public function like()

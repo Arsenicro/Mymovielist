@@ -21,6 +21,6 @@ class Genre
 
     public static function getAllMovies($name)
     {
-        return NEO4JGenre::where('name', $name)->first()->movie()->get();
+        return Genre::getNeo4jGenre($name)->movie()->get();
     }
 }

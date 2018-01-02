@@ -16,7 +16,7 @@ class NEO4JPerson extends NeoEloquent
 
     public function hasFan()
     {
-        return $this->hasMany('Mymovielist\NEO4J\NEO4JUser', 'FAN');
+        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JUser', 'FAN');
     }
 
     public function isDirector()

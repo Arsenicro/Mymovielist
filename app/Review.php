@@ -27,4 +27,21 @@ class Review
 
         return $sqlReview->id;
     }
+
+    public static function getNeo4jReview($rid)
+    {
+        return NEO4JReview::where('rid',$rid)->first();
+    }
+
+    public static function getAuthor($rid)
+    {
+        return Review::getNeo4jReview($rid)->wroteBy()->get()->first();
+    }
+
+    public static function getMovie($rid)
+    {
+        return Review::getNeo4jReview($rid)->movie()->get()->first();
+    }
+
+
 }
