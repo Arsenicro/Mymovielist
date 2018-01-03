@@ -17,9 +17,9 @@ class CreatePersonsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('surname');
-            $table->string('photo');
-            $table->date('birthday');
-            $table->string('biography');
+            $table->string('photo')->nullable();
+            $table->date('birthday')->nullable();
+            $table->string('biography')->nullable();
             $table->timestamps();
         });
     }

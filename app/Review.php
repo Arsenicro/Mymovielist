@@ -9,12 +9,7 @@ class Review
 {
     public static function create(array $data, $mid, $login)
     {
-        $sqlReview = SQLReview::create(
-            [
-                'text'  => $data['text'],
-                'score' => $data['score']
-            ]
-        );
+        $sqlReview = SQLReview::create($data);
 
         $neo4jReview = NEO4JReview::create(['rid' => $sqlReview->id]);
 

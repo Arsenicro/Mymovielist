@@ -9,5 +9,5 @@ class SQLReview extends Model
     protected $table = 'reviews';
     protected $connection = 'mysql';
 
-    protected $fillable = ['text', 'score'];
+    protected $fillable = ['text'];
 }

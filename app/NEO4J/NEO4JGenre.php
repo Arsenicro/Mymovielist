@@ -16,7 +16,7 @@ class NEO4JGenre extends NeoEloquent
 
     public function movie()
     {
-        return $this->hasMany('Mymovielist\NEO4J\NEO4JMovie', 'IS_GENRE');
+        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JMovie', 'IS_GENRE');
     }
 
 }

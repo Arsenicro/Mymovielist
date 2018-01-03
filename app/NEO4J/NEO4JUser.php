@@ -19,6 +19,11 @@ class NEO4JUser extends NeoEloquent
         return $this->belongsToMany('Mymovielist\NEO4J\NEO4JUser', 'FOLLOWS');
     }
 
+    public function followed()
+    {
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JUser', 'FOLLOWS');
+    }
+
     public function wroteReview()
     {
         return $this->hasMany('Mymovielist\NEO4J\NEO4JReview', 'WROTE');
@@ -26,12 +31,12 @@ class NEO4JUser extends NeoEloquent
 
     public function isFan()
     {
-        return $this->hasMany('Mymovielist\NEO4J\NEO4JPerson', 'FAN');
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JPerson', 'IS_FAN');
     }
 
     public function like()
     {
-        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JMovie', 'LIKE');
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JMovie', 'LIKE');
     }
 
     public function doesNotLike()

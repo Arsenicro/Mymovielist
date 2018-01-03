@@ -67,36 +67,16 @@ class Movie
 
     public static function newScore($mid, $score)
     {
-        $movie          = Movie::getNeo4jMovie($mid);
+        $movie          = Movie::getSqlMovie($mid);
         $numberOfScores = $movie->number_of_scores;
-        $oldScore       = $movie->score;
+        $oldScore       = $movie->score * $numberOfScores;
 
         $numberOfScores += 1;
-        $newScore       = $oldScore + $score;
+        $newScore       = ($oldScore + $score) / $numberOfScores;
 
         $movie->number_of_scores = $numberOfScores;
         $movie->score            = $newScore;
         $movie->save();
-    }
-
-    public static function avgScore($mid)
-    {
-        $movie          = Movie::getNeo4jMovie($mid);
-        $numberOfScores = $movie->number_of_scores;
-        $totalScore     = $movie->score;
-
-        if($numberOfScores == 0)
-            return null;
-
-        return $totalScore / $numberOfScores;
-    }
-
-    public static function getUserScore($login, $mid)
-    {
-        $user  = User::getNeo4jUser($login);
-        $movie = Movie::getNeo4jMovie($mid);
-
-        return $user->score()->edge($movie)->score;
     }
 
     public static function getReviews($mid)

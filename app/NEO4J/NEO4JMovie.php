@@ -16,17 +16,17 @@ class NEO4JMovie extends NeoEloquent
 
     public function review()
     {
-        return $this->hasMany('Mymovielist\NEO4J\NEO4JReview', 'ABOUT_MOVIE');
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JReview', 'HAS_REVIEW');
     }
 
     public function isGenre()
     {
-        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JGenre', 'IS_GENRE');
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JGenre', 'IS_GENRE');
     }
 
     public function isLiked()
     {
-        return $this->hasMany('Mymovielist\NEO4J\NEO4JUser', 'LIKE');
+        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JUser', 'LIKE');
     }
 
     public function isNotLiked()

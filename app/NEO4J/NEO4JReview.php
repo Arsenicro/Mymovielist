@@ -16,7 +16,7 @@ class NEO4JReview extends NeoEloquent
 
     public function movie()
     {
-        return $this->belongsTo('Mymovielist\NEO4J\NEO4JMovie', 'ABOUT_MOVIE');
+        return $this->belongsTo('Mymovielist\NEO4J\NEO4JMovie', 'HAS_REVIEW');
     }
 
     public function wroteBy()

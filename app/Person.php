@@ -32,8 +32,9 @@ class Person
 
     public static function getPersonsInfo($columns = null)
     {
-        if($columns != null)
+        if ($columns != null) {
             return SQLPerson::all($columns);
+        }
         return SQLPerson::all();
     }
 
@@ -61,7 +62,8 @@ class Person
     {
         $person = Person::getNeo4jPerson($pid);
         $movie  = Movie::getNeo4jMovie($mid);
+        $edge   = $person->isStar()->edge($movie);
 
-        return $person->isStar()->edge($movie)->role;
+        return $edge != null ? $edge->role : null;
     }
 }
