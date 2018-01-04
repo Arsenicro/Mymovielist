@@ -3,33 +3,44 @@
 namespace Mymovielist;
 
 use Carbon\Carbon;
-use Mockery\Exception;
 use Mymovielist\NEO4J\NEO4JUser;
 use Mymovielist\SQL\SQLUser;
 
 class User
 {
 
+    private $login;
+    private $sqlUser;
+    private $neo4jUser;
+
+    public function __construct($login, $sqlUser = null, $neo4JUser = null)
+    {
+        $this->login     = $login;
+        $this->sqlUser   = $sqlUser ?? $this->getSqlUser();
+        $this->neo4jUser = $neo4JUser ?? $this->getNeo4jUser();
+    }
+
     public static function create(array $data)
     {
-        NEO4JUser::create(['login' => $data['login']]);
+        $neo4jUser = NEO4JUser::create(['login' => $data['login']]);
+        $sqlUser   = SQLUser::create($data);
 
-        return SQLUser::create($data);
+        return new User($sqlUser->login, $sqlUser, $neo4jUser);
     }
 
-    public static function getNeo4jUser($login)
+    public function getNeo4jUser()
     {
-        return NEO4JUser::where('login', $login)->first();
+        return $this->neo4jUser ?? NEO4JUser::where('login', $this->login)->first();
     }
 
-    public static function getSqlUser($login)
+    public function getSqlUser()
     {
-        return SQLUser::where('login', $login)->first();
+        return $this->sqlUser ?? SQLUser::where('login', $this->login)->first();
     }
 
-    public static function getUserInfo($login, array $columns = null)
+    public function getUserInfo(array $columns = null)
     {
-        return User::getSqlUser($login)->get($columns)->first();
+        return $this->sqlUser->get($columns)->first();
     }
 
     public static function getUsersInfo($columns = null)
@@ -40,177 +51,174 @@ class User
         return SQLUser::all();
     }
 
-    public static function setAttribute($id, $attribute, $value)
+    public function setAttribute($data)
     {
-        $user = SQLUser::where('id', $id)->first();
-
-        switch ($attribute) {
-            case "name":
-                $user->update(['name' => $value]);
-                break;
-            case "surname":
-                $user->update(['surname' => $value]);
-                break;
-            case "avatar":
-                $user->update(['avatar' => $value]);
-                break;
-            case "birthday":
-                $user->update(['birthday' => $value]);
-                break;
-            case "about":
-                $user->update(['about' => $value]);
-                break;
-            case "location":
-                $user->update(['location' => $value]);
-                break;
-            case "gender":
-                $user->update(['gender' => $value]);
-                break;
-            default:
-                throw new Exception("Wrong argument passed");
-        }
-
+        $user = $this->sqlUser;
+        $user->update($data);
     }
 
-    public static function follow($login1, $login2)
+    public function follow(User $followedUser)
     {
-        $user1 = User::getNeo4jUser($login1);
-        $user2 = User::getNeo4jUser($login2);
+        $user = $this->getNeo4jUser();
 
-        $user1->followers()->save($user2, ["since" => Carbon::now()->toDateString()]);
+        $user->followers()->save($followedUser->getNeo4jUser(), ["since" => Carbon::now()->toDateString()]);
     }
 
-    public static function getFollowers($login)
+    public function getFollowers()
     {
-        return User::getNeo4jUser($login)->followers()->get();
+        return $this->getNeo4jUser()->followers()->get();
     }
 
-    public static function getFollowed($login)
+    public function getFollowed()
     {
-        return User::getNeo4jUser($login)->followed()->get();
+        return $this->getNeo4jUser()->followed()->get();
     }
 
-    public static function makeFan($login, $pid)
+    public function makeFan(Person $person)
     {
-        $person = Person::getNeo4jPerson($pid);
-        $user   = User::getNeo4jUser($login);
+        $user = $this->getNeo4jUser();
 
-        $user->isFan()->save($person);
+        $user->isFan()->save($person->getNeo4jPerson());
     }
 
-    public static function getIdols($login)
+    public function getIdols()
     {
-        return User::getNeo4jUser($login)->isFan()->get();
+        return $this->getNeo4jUser()->isFan()->get();
     }
 
-    public static function likeIt($login, $mid)
+    public function likeIt(Movie $movie)
     {
-        $movie = Movie::getNeo4jMovie($mid);
-        $user  = User::getNeo4jUser($login);
+        $user = $this->getNeo4jUser();
 
-        $user->like()->save($movie);
+        $user->like()->save($movie->getNeo4jMovie());
     }
 
-    public static function getLikedMovies($login)
+    public function getLikedMovies()
     {
-        return User::getNeo4jUser($login)->like()->get();
+        return $this->getNeo4jUser()->like()->get();
     }
 
-    public static function doesNotLike($login, $mid)
+    public function doesNotLike(Movie $movie)
     {
-        $movie = Movie::getNeo4jMovie($mid);
-        $user  = User::getNeo4jUser($login)->first();
+        $user = $this->getNeo4jUser()->first();
 
-        $user->doesNotLike()->save($movie);
+        $user->doesNotLike()->save($movie->getNeo4jMovie());
     }
 
-    public static function getUnlikedMovies($login)
+    public function getUnlikedMovies()
     {
-        return User::getNeo4jUser($login)->doesNotLike()->get();
+        return $this->getNeo4jUser()->doesNotLike()->get();
     }
 
-    public static function getHisReviews($login)
+    public function getReviews()
     {
-        return User::getNeo4jUser($login)->wroteReview()->get();
+        return $this->getNeo4jUser()->wroteReview()->get();
     }
 
-    public static function score($login, $mid, $score)
+    public function score(Movie $movie, $score)
     {
-        $user       = User::getNeo4jUser($login);
-        $neo4jMovie = Movie::getNeo4jMovie($mid);
+        $user = $this->getNeo4jUser();
+        $user->score()->save($movie->getNeo4jMovie(), ['score' => $score]);
 
-        $user->score()->save($neo4jMovie, ['score' => $score]);
-
-        Movie::newScore($mid, $score);
+        $movie->newScore($score);
     }
 
-    public static function getScoredMovies($login)
+    public function getScoredMovies()
     {
-        return User::getNeo4jUser($login)->score()->get();
+        return $this->getNeo4jUser()->score()->get();
     }
 
-    public static function getUserScore($login, $mid)
+    public function getUserScore(Movie $movie)
     {
-        $user  = User::getNeo4jUser($login);
-        $movie = Movie::getNeo4jMovie($mid);
-        $edge  = $user->score()->edge($movie);
+        $user = $this->getNeo4jUser();
+        $edge = $user->score()->edge($movie->getNeo4jMovie());
 
         return $edge != null ? $edge->score : null;
     }
 
-    public static function watched($login, $mid)
+    public function likeMovie(Movie $movie)
     {
-        return User::getUserScore($login, $mid) != null ? true : false;
+        $user = $this->getNeo4jUser();
+
+        return $user->like()->edge($movie->getNeo4jMovie()) != null ? true : false;
     }
 
-    public static function dislike($login, $mid)
+    public function scoreMovie(Movie $movie)
     {
-        $user  = User::getNeo4jUser($login);
-        $movie = Movie::getNeo4jMovie($mid);
+        $user = $this->getNeo4jUser();
 
-        return $user->doesNotLike()->edge($movie) != null ? true : false;
+        return $user->score()->edge($movie->getNeo4jMovie()) != null ? true : false;
+    }
+
+    //Movie is watched iff is scored
+
+    public function watchedMovie(Movie $movie)
+    {
+        return $this->scoreMovie($movie);
+    }
+
+    public function dislikeMovie(Movie $movie)
+    {
+        $user = $this->getNeo4jUser();
+
+        return $user->doesNotLike()->edge($movie->getNeo4jMovie()) != null ? true : false;
     }
 
     //Return true iff user 'login' does not watch 'mid' and does not dislike it
 
-    public static function canRecommend($login, $mid)
+    public function canRecommend(Movie $movie)
     {
-        return !User::watched($login, $mid) && !User::dislike($login,$mid);
+        return !$this->watchedMovie($movie) && !$this->dislikeMovie($movie);
     }
 
-    public static function recommendByLikedAndGenres($login)
+    public function recommendByLikedAndGenres()
     {
-        $liked = User::getLikedMovies($login);
+        $liked = $this->getLikedMovies();
 
-        $genres = $liked->map(function ($item,$key){
-            return Movie::getGenres($item->mid);
-        })->collapse();
+        $genres = $liked->map(
+            function ($item, $key) {
+                $movie = new Movie($item->mid);
+                return $movie->getGenres();
+            }
+        )->collapse();
 
-        $movies = $genres->map(function ($item,$key){
-           return Genre::getAllMovies($item->name);
-        })->collapse()->unique();
+        $movies = $genres->map(
+            function ($item, $key) {
+                $genre = new Genre($item->name);
+                return $genre->getAllMovies();
+            }
+        )->collapse()->unique();
 
-        return $movies->filter(function ($item,$key) use ($login) {
-            return User::canRecommend($login,$item->mid);
-        });
+        return $movies->filter(
+            function ($item, $key) {
+                $movie = new Movie($item->mid);
+                return $this->canRecommend($movie);
+            }
+        );
     }
 
-    public static function recommendByFollowed($login)
+    public function recommendByFollowed()
     {
-        $followed = User::getFollowed($login);
+        $followed = $this->getFollowed();
 
-        $movies = $followed->map(function ($item,$key){
-            return User::getLikedMovies($item->login);
-        })->collapse()->unique();
+        $movies = $followed->map(
+            function ($item, $key) {
+                $user = new User($item->login);
+                return $user->getLikedMovies();
+            }
+        )->collapse()->unique();
 
-        return $movies->filter(function ($item,$key) use ($login) {
-            return User::canRecommend($login,$item->mid);
-        });
+        return $movies->filter(
+            function ($item, $key) {
+                $movie = new Movie($item->mid);
+                return $this->canRecommend($movie);
+            }
+        );
     }
 
-    public static function recommend($login)
+    public function recommend()
     {
-        return User::recommendByFollowed($login)->merge(User::recommendByLikedAndGenres($login))->unique()->values();
+        return $this->recommendByFollowed()->merge($this->recommendByLikedAndGenres())->unique()->values();
     }
 
 

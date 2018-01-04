@@ -7,6 +7,18 @@ use Mymovielist\SQL\SQLMovie;
 
 class Movie
 {
+
+    private $mid;
+    private $neo4jMovie = null;
+    private $sqlMovie = null;
+
+    public function __construct($mid, $sqlMovie = null, $neo4jMovie = null)
+    {
+        $this->mid        = $mid;
+        $this->sqlMovie   = $sqlMovie ?? $this->getSqlMovie();
+        $this->neo4jMovie = $neo4jMovie ?? $this->getNeo4jMovie();
+    }
+
     public static function create(array $data, array $genres)
     {
         $sqlMovie   = SQLMovie::create($data);
@@ -15,22 +27,22 @@ class Movie
             $neo4jMovie->isGenre()->save(Genre::getNeo4jGenre($genre));
         }
 
-        return $sqlMovie->id;
+        return new Movie($sqlMovie->id, $sqlMovie, $neo4jMovie);
     }
 
-    public static function getNeo4jMovie($mid)
+    public function getNeo4jMovie()
     {
-        return NEO4JMovie::where('mid', $mid)->first();
+        return $this->neo4jMovie ?? NEO4JMovie::where('mid', $this->mid)->first();
     }
 
-    public static function getSqlMovie($mid)
+    public function getSqlMovie()
     {
-        return SQLMovie::where('id', $mid)->first();
+        return $this->sqlMovie ?? SQLMovie::where('id', $this->mid)->first();
     }
 
-    public static function getMovieInfo($mid, array $columns = null)
+    public function getMovieInfo(array $columns = null)
     {
-        return Movie::getSqlMovie($mid)->get($columns)->first();
+        return $this->sqlMovie->get($columns)->first();
     }
 
     public static function getMoviesInfo($columns = null)
@@ -41,33 +53,24 @@ class Movie
         return SQLMovie::all();
     }
 
-    public static function getAvgScore($mid)
+    public function getGenres()
     {
-        $movie          = Movie::getNeo4jMovie($mid);
-        $numberOfScores = $movie->number_of_scores;
-        $realScore      = $movie->score;
-
-        return $numberOfScores / $realScore;
+        return $this->neo4jMovie->isGenre()->get();
     }
 
-    public static function getGenres($mid)
+    public function getLikers()
     {
-        return Movie::getNeo4jMovie($mid)->isGenre()->get();
+        return $this->neo4jMovie->isLiked()->get();
     }
 
-    public static function getLikers($mid)
+    public function getNotLikers()
     {
-        return Movie::getNeo4jMovie($mid)->isLiked()->get();
+        return $this->neo4jMovie->isNotLiked()->get();
     }
 
-    public static function getNotLikers($mid)
+    public function newScore($score)
     {
-        return Movie::getNeo4jMovie($mid)->isNotLiked()->get();
-    }
-
-    public static function newScore($mid, $score)
-    {
-        $movie          = Movie::getSqlMovie($mid);
+        $movie          = $this->sqlMovie;
         $numberOfScores = $movie->number_of_scores;
         $oldScore       = $movie->score * $numberOfScores;
 
@@ -79,47 +82,47 @@ class Movie
         $movie->save();
     }
 
-    public static function getReviews($mid)
+    public function getReviews()
     {
-        return Movie::getNeo4jMovie($mid)->review()->get();
+        return $this->neo4jMovie->review()->get();
     }
 
-    public static function directedBy($mid, $pid)
+    public function directedBy(Person $person)
     {
-        $movie  = Movie::getNeo4jMovie($mid);
-        $person = Person::getNeo4jPerson($pid);
+        $movie       = $this->neo4jMovie;
+        $neo4jPerson = $person->getNeo4jPerson();
 
-        $movie->hasDirectors()->save($person);
+        $movie->hasDirectors()->save($neo4jPerson);
     }
 
-    public static function wroteBy($mid, $pid)
+    public function wroteBy(Person $person)
     {
-        $movie  = Movie::getNeo4jMovie($mid);
-        $person = Person::getNeo4jPerson($pid);
+        $movie       = $this->neo4jMovie;
+        $neo4jPerson = $person->getNeo4jPerson();
 
-        $movie->hasWriters()->save($person);
+        $movie->hasWriters()->save($neo4jPerson);
     }
 
-    public static function newStar($mid, $pid, $role)
+    public function newStar(Person $person, $role)
     {
-        $movie  = Movie::getNeo4jMovie($mid);
-        $person = Person::getNeo4jPerson($pid);
+        $movie       = $this->neo4jMovie;
+        $neo4jPerson = $person->getNeo4jPerson();
 
-        $movie->hasStars()->save($person, ['role' => $role]);
+        $movie->hasStars()->save($neo4jPerson, ['role' => $role]);
     }
 
-    public static function getStars($mid)
+    public function getStars()
     {
-        return Movie::getNeo4jMovie($mid)->hasStars()->get();
+        return $this->neo4jMovie->hasStars()->get();
     }
 
-    public static function getDirectors($mid)
+    public function getDirectors()
     {
-        return Movie::getNeo4jMovie($mid)->hasDirectors()->get();
+        return $this->neo4jMovie->hasDirectors()->get();
     }
 
-    public static function getWriters($mid)
+    public function getWriters()
     {
-        return Movie::getNeo4jMovie($mid)->hasWriters()->get();
+        return $this->neo4jMovie->hasWriters()->get();
     }
 }

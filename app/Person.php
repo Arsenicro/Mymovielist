@@ -7,27 +7,38 @@ use Mymovielist\SQL\SQLPerson;
 
 class Person
 {
+    private $pid;
+    private $sqlPerson;
+    private $neo4jPerson;
+
+    public function __construct($pid, $sqlPerson = null, $neo4jPerson = null)
+    {
+        $this->pid         = $pid;
+        $this->sqlPerson   = $sqlPerson ?? $this->getSqlPerson();
+        $this->neo4jPerson = $neo4jPerson ?? $this->getNeo4jPerson();
+    }
+
     public static function create(array $data)
     {
-        $person = SQLPerson::create($data);
-        NEO4JPerson::create(['pid' => $person->id]);
+        $sqlPerson   = SQLPerson::create($data);
+        $neo4jPerson = NEO4JPerson::create(['pid' => $sqlPerson->id]);
 
-        return $person->id;
+        return new Genre($sqlPerson->id, $sqlPerson, $neo4jPerson);
     }
 
-    public static function getNeo4jPerson($pid)
+    public function getNeo4jPerson()
     {
-        return NEO4JPerson::where('pid', $pid)->first();
+        return $this->neo4jPerson ?? NEO4JPerson::where('pid', $this->pid)->first();
     }
 
-    public static function getSqlPerson($pid)
+    public function getSqlPerson()
     {
-        return SQLPerson::where('id', $pid)->first();
+        return $this->sqlPerson ?? SQLPerson::where('id', $this->pid)->first();
     }
 
-    public static function getPersonInfo($pid, array $columns = null)
+    public function getPersonInfo(array $columns = null)
     {
-        return Person::getSqlPerson($pid)->get($columns)->first();
+        return $this->sqlPerson->get($columns)->first();
     }
 
     public static function getPersonsInfo($columns = null)
@@ -38,31 +49,31 @@ class Person
         return SQLPerson::all();
     }
 
-    public static function getFans($pid)
+    public function fans()
     {
-        return Person::getNeo4jPerson($pid)->hasFan()->get();
+        return $this->neo4jPerson->hasFan()->get();
     }
 
-    public static function getWrote($pid)
+    public function wrote()
     {
-        return Person::getNeo4jPerson($pid)->isWriter()->get();
+        return $this->neo4jPerson->isWriter()->get();
     }
 
-    public static function getDirected($pid)
+    public function directed()
     {
-        return Person::getNeo4jPerson($pid)->isDirector()->get();
+        return $this->neo4jPerson->isDirector()->get();
     }
 
-    public static function getPlayed($pid)
+    public function played()
     {
-        return Person::getNeo4jPerson($pid)->isStar()->get();
+        return $this->neo4jPerson->isStar()->get();
     }
 
-    public static function getRole($pid, $mid)
+    public function getRole(Movie $movie)
     {
-        $person = Person::getNeo4jPerson($pid);
-        $movie  = Movie::getNeo4jMovie($mid);
-        $edge   = $person->isStar()->edge($movie);
+        $person     = $this->neo4jPerson;
+        $neo4jMovie = $movie->getNeo4jMovie();
+        $edge       = $person->isStar()->edge($neo4jMovie);
 
         return $edge != null ? $edge->role : null;
     }

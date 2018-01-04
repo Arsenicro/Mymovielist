@@ -7,10 +7,20 @@ use Mymovielist\SQL\SQLReview;
 
 class Review
 {
+    private $rid;
+    private $sqlReview;
+    private $neo4jReview;
+
+    public function __construct($rid, $sqlReview = null, $neo4jReview = null)
+    {
+        $this->rid         = $rid;
+        $this->sqlReview   = $sqlReview ?? $this->getSqlReview();
+        $this->neo4jReview = $neo4jReview ?? $this->getNeo4jReview();
+    }
+
     public static function create(array $data, $mid, $login)
     {
-        $sqlReview = SQLReview::create($data);
-
+        $sqlReview   = SQLReview::create($data);
         $neo4jReview = NEO4JReview::create(['rid' => $sqlReview->id]);
 
         $user  = User::getNeo4jUser($login);
@@ -19,39 +29,40 @@ class Review
         $neo4jReview->wroteBy()->associate($user)->save();
         $neo4jReview->movie()->associate($movie)->save();
 
-        return $sqlReview->id;
+        return new Review($sqlReview->id,$sqlReview,$neo4jReview);
     }
 
-    public static function getSqlReview($rid)
+    public function getSqlReview()
     {
-        return SQLReview::where('id', $rid)->first();
+        return $this->sqlReview ?? SQLReview::where('id', $this->rid)->first();
     }
 
-    public static function getReviewInfo($rid, array $columns = null)
+    public function getNeo4jReview()
     {
-        return Review::getSqlReview($rid)->get($columns)->first();
+        return $this->neo4jReview ?? NEO4JReview::where('id', $this->rid)->first();
     }
 
-    public static function getReviewsInfo($columns = null)
+    public function getReviewInfo(array $columns = null)
     {
-        if($columns != null)
+        return $this->sqlReview->get($columns)->first();
+    }
+
+    public static function getAllReviewsInfo($columns = null)
+    {
+        if ($columns != null) {
             return SQLReview::all($columns);
+        }
         return SQLReview::all();
     }
 
-    public static function getNeo4jReview($rid)
+    public function getAuthor()
     {
-        return NEO4JReview::where('rid', $rid)->first();
+        return $this->neo4jReview->wroteBy()->get()->first();
     }
 
-    public static function getAuthor($rid)
+    public function getMovie()
     {
-        return Review::getNeo4jReview($rid)->wroteBy()->get()->first();
-    }
-
-    public static function getMovie($rid)
-    {
-        return Review::getNeo4jReview($rid)->movie()->get()->first();
+        return $this->neo4jReview->movie()->get()->first();
     }
 
 
