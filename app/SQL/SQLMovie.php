@@ -11,9 +11,4 @@ class SQLMovie extends Model
     protected $connection = 'mysql';
 
     protected $fillable = ['title', 'prod_date', 'description', 'score', 'number_of_scores', 'photo'];
-
-    public function review()
-    {
-        return $this->hasMany('Mymovielist\NEO4J\NEO4JReview', 'ABOUT_MOVIE');
-    }
 }

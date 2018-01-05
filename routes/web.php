@@ -18,3 +18,5 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/list', 'ListController@index')->name('list');
+Route::get('/movie/{title}', 'MovieController@index')->name('movie');

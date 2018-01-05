@@ -70,8 +70,10 @@
                 </div>
             </div>
         </nav>
-
+    <div id="content">
         @yield('content')
+    </div>
+
     </div>
 
     <!-- Scripts -->
