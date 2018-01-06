@@ -66,12 +66,12 @@ class User
 
     public function getFollowers()
     {
-        return $this->getNeo4jUser()->followers()->get();
+        return $this->getNeo4jUser()->followers;
     }
 
     public function getFollowed()
     {
-        return $this->getNeo4jUser()->followed()->get();
+        return $this->getNeo4jUser()->followed;
     }
 
     public function makeFan(Person $person)
@@ -95,7 +95,7 @@ class User
 
     public function getLikedMovies()
     {
-        return $this->getNeo4jUser()->like()->get();
+        return $this->getNeo4jUser()->like;
     }
 
     public function doesNotLike(Movie $movie)
@@ -107,12 +107,12 @@ class User
 
     public function getUnlikedMovies()
     {
-        return $this->getNeo4jUser()->doesNotLike()->get();
+        return $this->getNeo4jUser()->doesNotLike;
     }
 
     public function getReviews()
     {
-        return $this->getNeo4jUser()->wroteReview()->get();
+        return $this->getNeo4jUser()->wroteReview;
     }
 
     public function score(Movie $movie, $score)
@@ -125,7 +125,7 @@ class User
 
     public function getScoredMovies()
     {
-        return $this->getNeo4jUser()->score()->get();
+        return $this->getNeo4jUser()->score;
     }
 
     public function getUserScore(Movie $movie)
@@ -173,24 +173,17 @@ class User
 
     public function recommendByLikedAndGenres()
     {
-        $liked = $this->getLikedMovies();
-
-        $genres = $liked->map(
-            function ($item, $key) {
-                $movie = new Movie($item->mid);
-                return $movie->getGenres();
+        return $this->getLikedMovies()->map(
+            function ($item) {
+                return $item->isGenre;
             }
-        )->collapse();
-
-        $movies = $genres->map(
-            function ($item, $key) {
+        )->collapse()->map(
+            function ($item) {
                 $genre = new Genre($item->name);
                 return $genre->getAllMovies();
             }
-        )->collapse()->unique();
-
-        return $movies->filter(
-            function ($item, $key) {
+        )->collapse()->unique()->filter(
+            function ($item) {
                 $movie = new Movie($item->mid);
                 return $this->canRecommend($movie);
             }
@@ -199,17 +192,12 @@ class User
 
     public function recommendByFollowed()
     {
-        $followed = $this->getFollowed();
-
-        $movies = $followed->map(
-            function ($item, $key) {
-                $user = new User($item->login);
-                return $user->getLikedMovies();
+        return $this->getFollowed()->map(
+            function ($item) {
+                return $item->like;
             }
-        )->collapse()->unique();
-
-        return $movies->filter(
-            function ($item, $key) {
+        )->collapse()->unique()->filter(
+            function ($item) {
                 $movie = new Movie($item->mid);
                 return $this->canRecommend($movie);
             }
