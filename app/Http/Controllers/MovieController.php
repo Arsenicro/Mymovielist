@@ -3,17 +3,22 @@
 namespace Mymovielist\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Mymovielist\Movie;
 use Mymovielist\Person;
 use Mymovielist\Review;
 use Mymovielist\User;
-use function PHPSTORM_META\map;
 
 class MovieController extends Controller
 {
     public function movie($id)
     {
-        $movie     = new Movie($id);
+        $movie = new Movie($id);
+
+        if (!$movie->exist()) {
+            abort(404);
+        }
+
         $info      = $movie->getMovieInfo();
         $genres    = $movie->getGenres();
         $casts     = $movie->getStars();
@@ -53,41 +58,21 @@ class MovieController extends Controller
                 return ['info' => $person->getPersonInfo()];
             }
         );
+        if (Auth::user() != null) {
+            $user      = new User(Auth::user()->login);
+            $userScore = $user->getUserScore($movie);
+        }
 
         return view(
             'movie',
             [
+                'userscore' => $userScore ?? "N/A",
                 'info'      => $info,
                 'genres'    => $genres,
                 'casts'     => $casts,
                 'directors' => $directors,
                 'writers'   => $writers,
                 'reviews'   => $reviews
-            ]
-        );
-    }
-
-    public function review($mid, $rid)
-    {
-        $review = new Review($rid);
-
-        if ($review->getMovie()->mid != $mid) {
-            abort(404);
-        }
-
-        $movie      = new Movie($mid);
-        $movieInfo  = $movie->getMovieInfo();
-        $user       = $review->getAuthor();
-        $user       = new User($user->login);
-        $userInfo   = $user->getUserInfo();
-        $reviewInfo = $review->getReviewInfo();
-
-        return view(
-            'review',
-            [
-                'movieinfo'  => $movieInfo,
-                'userinfo'   => $userInfo,
-                'reviewinfo' => $reviewInfo
             ]
         );
     }

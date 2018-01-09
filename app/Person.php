@@ -18,6 +18,15 @@ class Person
         $this->neo4jPerson = $neo4jPerson ?? $this->getNeo4jPerson();
     }
 
+    public function exist()
+    {
+        if ($this->sqlPerson == null || $this->neo4jPerson == null) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static function create(array $data)
     {
         $sqlPerson   = SQLPerson::create($data);

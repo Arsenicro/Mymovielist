@@ -11,6 +11,10 @@ class PersonController extends Controller
     public function person($pid)
     {
         $person     = new Person($pid);
+
+        if(!$person->exist())
+            abort(404);
+
         $personInfo = $person->getPersonInfo();
         $played     = $person->played();
         $directed   = $person->directed();

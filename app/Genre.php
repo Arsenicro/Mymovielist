@@ -15,6 +15,15 @@ class Genre
         $this->neo4jGenre = $neo4jGenre ?? $this->getNeo4jGenre();
     }
 
+    public function exist()
+    {
+        if ($this->neo4jGenre == null) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static function create($data)
     {
         $neo4jGenre = NEO4JGenre::create($data);

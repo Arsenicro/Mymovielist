@@ -18,6 +18,15 @@ class Review
         $this->neo4jReview = $neo4jReview ?? $this->getNeo4jReview();
     }
 
+    public function exist()
+    {
+        if ($this->sqlReview == null || $this->neo4jReview == null) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static function create(array $data, $mid, $login)
     {
         $sqlReview   = SQLReview::create($data);

@@ -14,7 +14,7 @@
             </td>
             <td class="text-center" valign="top" width="90%">
                 <strong style="font-size: 50px; text-align: center;">
-                    {{ $info->name }} {{ $info->surname }} <span class="glyphicon glyphicon-edit" style="margin-left: 10px"></span>
+                    {{ $info->name }} {{ $info->surname }} <span class="glyphicon glyphicon-edit" style="margin-left: 10px"></span>  <span class="glyphicon glyphicon-check" style="margin-left: 10px"></span>
                 </strong>
                 <div style="margin-top: 50px">{{ $info->biography }}</div>
                 <table class="table" style="margin-top: 50px">

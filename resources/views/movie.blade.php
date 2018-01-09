@@ -30,7 +30,7 @@
                                     <img src="{{ $review['user']->avatar }}" width="25px" height="25px">
                                 </th>
                                 <th class="text-left" width="80%">
-                                    {{ $review['user']->login }}
+                                    <a href="{{ route('user',[$review['user']->login]) }}">{{ $review['user']->login }}</a>
                                 </th>
                                 <th class="text-center" style="vertical-align: middle">
                                     <a href="{{ route('review',[$info->id,$review['info']->id]) }}"><span class="glyphicon glyphicon-info-sign"></span></a>
@@ -42,14 +42,17 @@
             </td>
             <td class="text-center" valign="top" width="90%">
                 <strong style="font-size: 50px; text-align: center;">
-                    {{ $info->title }} <span class="glyphicon glyphicon-edit" style="margin-left: 10px"></span>
+                    {{ $info->title }} <span class="glyphicon glyphicon-edit" style="margin-left: 10px"></span> <span class="glyphicon glyphicon-check" style="margin-left: 10px"></span>
                 </strong>
                 <table class="table" style="margin-top: 40px">
                     <tr>
                         <th class="text-center" width="10%">
                             Score
                         </th>
-                        <th class="text-center border" width="90%">
+                        <th class="text-center" width="10%">
+                            Your Score
+                        </th>
+                        <th class="text-center border" width="80%">
                             Genres
                         </th>
                     </tr>
@@ -57,6 +60,9 @@
                         <th class="text-center">
                             {{ $info->score }}<br>
                             <span style="font-size: 15px">{{ $info->number_of_scores }} users</span>
+                        </th>
+                        <th class="text-center" style="vertical-align: middle">
+                            {{ $userscore }}
                         </th>
                         <th class="text-center" style="vertical-align: middle">
                             @foreach($genres as $i=>$genre)

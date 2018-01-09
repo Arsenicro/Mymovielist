@@ -20,6 +20,15 @@ class User
         $this->neo4jUser = $neo4JUser ?? $this->getNeo4jUser();
     }
 
+    public function exist()
+    {
+        if ($this->sqlUser == null || $this->neo4jUser == null) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static function create(array $data)
     {
         $neo4jUser = NEO4JUser::create(['login' => $data['login']]);

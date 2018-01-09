@@ -19,6 +19,15 @@ class Movie
         $this->neo4jMovie = $neo4jMovie ?? $this->getNeo4jMovie();
     }
 
+    public function exist()
+    {
+        if ($this->sqlMovie == null || $this->neo4jMovie == null) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static function create(array $data, array $genres)
     {
         $sqlMovie   = SQLMovie::create($data);
