@@ -15,6 +15,29 @@
                     </div>
                 </div>
             </td>
+            <td class="text-center" valign="top" width="90%">
+                <table class="table">
+                    <tr>
+                        <td class="text-left" width="10%">
+                            <img src="{{ $userinfo->avatar }}" width="50px" height="50px">
+                        </td>
+                        <td class="text-center" style="vertical-align: middle" width="60%">
+                            {{ $userinfo->login }}
+                        </td>
+                        <td class="text-right" style="vertical-align: middle" width="20%">
+                            {{ $reviewinfo->created_at }}
+                        </td>
+                        <td  class="text-right" style="vertical-align: middle" width="10%">
+                            <span class="glyphicon glyphicon-edit"></span> <span class="glyphicon glyphicon-trash"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center" valign="center" colspan="4">
+                            {{ $reviewinfo->text }}
+                        </td>
+                    </tr>
+                </table>
+            </td>
         </tr>
     </table>
 @endsection
