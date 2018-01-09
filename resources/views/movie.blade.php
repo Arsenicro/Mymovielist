@@ -74,18 +74,18 @@
                     <b>Directed by:</b>
                     @foreach($directors as $i=>$director)
                         @if($i < count($directors) - 1)
-                            {{ $director['info']->name }} {{ $director['info']->surname }},
+                            <a href="{{ route('person',[$director['info']->id]) }}">{{ $director['info']->name }} {{ $director['info']->surname }}</a>,
                         @else
-                            {{ $director['info']->name }} {{ $director['info']->surname }}
+                            <a href="{{ route('person',[$director['info']->id]) }}">{{ $director['info']->name }} {{ $director['info']->surname }}</a>
                         @endif
                     @endforeach
                     <br>
                     <b>Wrote by:</b>
                     @foreach($writers as $i=>$writer)
                         @if($i < count($writers) - 1)
-                            {{ $writer['info']->name }} {{ $writer['info']->surname }},
+                            <a href="{{ route('person',[$writer['info']->id]) }}">{{ $writer['info']->name }} {{ $writer['info']->surname }}</a>,
                         @else
-                            {{ $writer['info']->name }} {{ $writer['info']->surname }}
+                            <a href="{{ route('person',[$writer['info']->id]) }}">{{ $writer['info']->name }} {{ $writer['info']->surname }}</a>
                         @endif
                     @endforeach
                 </div>
@@ -103,7 +103,7 @@
                                <img src="{{ $cast['info']->photo }}" width="50px" height="50px"> {{ $cast['role'] }}
                             </th>
                             <th class="text-center" style="vertical-align: middle">
-                                {{ $cast['info']->name }} {{ $cast['info']->surname }}
+                                <a href="{{ route('person',[$cast['info']->id]) }}">{{ $cast['info']->name }} {{ $cast['info']->surname }}</a>
                             </th>
                         </tr>
                     @endforeach
