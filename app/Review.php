@@ -13,7 +13,7 @@ class Review
 
     public function __construct($rid, $sqlReview = null, $neo4jReview = null)
     {
-        $this->rid         = $rid;
+        $this->rid         = intval($rid);
         $this->sqlReview   = $sqlReview ?? $this->getSqlReview();
         $this->neo4jReview = $neo4jReview ?? $this->getNeo4jReview();
     }
@@ -39,12 +39,12 @@ class Review
 
     public function getNeo4jReview()
     {
-        return $this->neo4jReview ?? NEO4JReview::where('id', $this->rid)->first();
+        return $this->neo4jReview ?? NEO4JReview::where('rid', $this->rid)->first();
     }
 
-    public function getReviewInfo(array $columns = null)
+    public function getReviewInfo()
     {
-        return $this->sqlReview->get($columns)->first();
+        return $this->sqlReview;
     }
 
     public static function getAllReviewsInfo($columns = null)

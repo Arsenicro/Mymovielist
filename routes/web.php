@@ -10,6 +10,11 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+//For query debugging:
+/*
+DB::listen(function($query){
+    var_dump($query->sql);
+});*/
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,4 +24,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/list', 'ListController@index')->name('list');
-Route::get('/movie/{title}', 'MovieController@index')->name('movie');
+Route::get('/movie/{id}', 'MovieController@movie')->name('movie');
+Route::get('/movie/{mid}/review/{rid}', 'MovieController@review')->name('review');
+Route::get('/person/{pid}', 'PersonController@person')->name('person');
+

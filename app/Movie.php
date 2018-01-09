@@ -14,7 +14,7 @@ class Movie
 
     public function __construct($mid, $sqlMovie = null, $neo4jMovie = null)
     {
-        $this->mid        = $mid;
+        $this->mid        = intval($mid);
         $this->sqlMovie   = $sqlMovie ?? $this->getSqlMovie();
         $this->neo4jMovie = $neo4jMovie ?? $this->getNeo4jMovie();
     }
@@ -40,9 +40,9 @@ class Movie
         return $this->sqlMovie ?? SQLMovie::where('id', $this->mid)->first();
     }
 
-    public function getMovieInfo(array $columns = null)
+    public function getMovieInfo()
     {
-        return $this->sqlMovie->get($columns)->first();
+        return $this->sqlMovie;
     }
 
     public static function getMoviesInfo($columns = null)

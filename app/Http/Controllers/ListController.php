@@ -10,13 +10,7 @@ class ListController extends Controller
 {
     public function index()
     {
-        $movies = Movie::getMoviesInfo(['title','score','photo','prod_date']);
-        $movies = $movies->map(function ($item)
-        {
-           $item->photo = $item->photo ?? 'https://websoul.pl/blog/wp-content/uploads/2013/06/question-mark1.jpg';
-            return $item;
-        });
-
+        $movies = Movie::getMoviesInfo(['id','title','score','photo','prod_date']);
         if(Input::get('order') == 'asc')
             $movies = $movies->sortBy(Input::get('sortby'));
         elseif (Input::get('order') == 'desc')

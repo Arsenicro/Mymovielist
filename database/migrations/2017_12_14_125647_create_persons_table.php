@@ -17,7 +17,7 @@ class CreatePersonsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('surname');
-            $table->string('photo')->nullable();
+            $table->text('photo')->default('https://websoul.pl/blog/wp-content/uploads/2013/06/question-mark1.jpg');
             $table->date('birthday')->nullable();
             $table->string('biography')->nullable();
             $table->timestamps();

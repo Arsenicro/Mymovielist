@@ -13,7 +13,7 @@ class Person
 
     public function __construct($pid, $sqlPerson = null, $neo4jPerson = null)
     {
-        $this->pid         = $pid;
+        $this->pid         = intval($pid);
         $this->sqlPerson   = $sqlPerson ?? $this->getSqlPerson();
         $this->neo4jPerson = $neo4jPerson ?? $this->getNeo4jPerson();
     }
@@ -36,9 +36,9 @@ class Person
         return $this->sqlPerson ?? SQLPerson::where('id', $this->pid)->first();
     }
 
-    public function getPersonInfo(array $columns = null)
+    public function getPersonInfo()
     {
-        return $this->sqlPerson->get($columns)->first();
+        return $this->sqlPerson;
     }
 
     public static function getPersonsInfo($columns = null)

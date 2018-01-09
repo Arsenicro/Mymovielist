@@ -35,7 +35,7 @@
                 <tr>
                     <th>
                         <img src="{{ $movie->photo }}" width="120px" height="120px" style="float: left; margin-right: 20px">
-                        <a href="{{ route('movie',$movie->title) }}">{{ $movie->title }}</a>
+                        <a href="{{ route('movie',[$movie->id]) }}">{{ $movie->title }}</a>
                     </th>
                     <th style="text-align: center">
                         <i>{{ $movie->prod_date }}</i>

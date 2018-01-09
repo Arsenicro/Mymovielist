@@ -38,9 +38,9 @@ class User
         return $this->sqlUser ?? SQLUser::where('login', $this->login)->first();
     }
 
-    public function getUserInfo(array $columns = null)
+    public function getUserInfo()
     {
-        return $this->sqlUser->get($columns)->first();
+        return $this->sqlUser;
     }
 
     public static function getUsersInfo($columns = null)

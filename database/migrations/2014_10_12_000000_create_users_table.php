@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('name')->nullable();
             $table->string('surname')->nullable();
-            $table->string('avatar')->nullable();
+            $table->text('avatar')->default('https://websoul.pl/blog/wp-content/uploads/2013/06/question-mark1.jpg');
             $table->date('birthday')->nullable();
             $table->string('about')->nullable();
             $table->string('location')->nullable();
