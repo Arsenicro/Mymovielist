@@ -39,6 +39,18 @@ class Movie
         return new Movie($sqlMovie->id, $sqlMovie, $neo4jMovie);
     }
 
+    public function save(array $data)
+    {
+        $sqlMovie = $this->getSqlMovie();
+
+        $sqlMovie->title       = array_key_exists('title', $data) ? $data['title'] : $sqlMovie->title;
+        $sqlMovie->prod_date   = array_key_exists('prod_date', $data) ? $data['prod_date'] : $sqlMovie->prod_date;
+        $sqlMovie->description = array_key_exists('description', $data) ? $data['description'] : $sqlMovie->description;
+        $sqlMovie->photo       = array_key_exists('photo', $data) ? $data['photo'] : $sqlMovie->photo;
+
+        $sqlMovie->save();
+    }
+
     public function getNeo4jMovie()
     {
         return $this->neo4jMovie ?? NEO4JMovie::where('mid', $this->mid)->first();

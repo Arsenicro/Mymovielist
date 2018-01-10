@@ -70,6 +70,26 @@
                 </div>
             </div>
         </nav>
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                <div class="alert alert-danger alert-dismissable">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">X</a>
+                    <strong>Error!</strong> {{ $error}}
+                </div>
+            @endforeach
+        @endif
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissable">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">X</a>
+                <strong>Error!</strong> {{ session('error') }}
+            </div>
+        @endif
+        @if(session('message'))
+            <div class="alert alert-success alert-dismissable">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">X</a>
+                <strong>Success!</strong> {{ session('message') }}
+            </div>
+        @endif
     <div id="content">
         @yield('content')
     </div>

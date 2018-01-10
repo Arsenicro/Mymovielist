@@ -29,6 +29,16 @@ class User
         return true;
     }
 
+    public function canEdit()
+    {
+        if($this->sqlUser->access == "m" || $this->sqlUser->access == "a")
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public static function create(array $data)
     {
         $neo4jUser = NEO4JUser::create(['login' => $data['login']]);

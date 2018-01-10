@@ -29,3 +29,13 @@ Route::get('/movie/{mid}/review/{rid}', 'ReviewController@review')->name('review
 Route::get('/person/{pid}', 'PersonController@person')->name('person');
 Route::get('/user/{login}', 'UserController@user')->name('user');
 
+Route::middleware('mod')->group(
+    function () {
+        Route::get('/movie/{id}/edit', 'MovieController@edit')->name('editMovie');
+        Route::post('/movie/{id}/edit/savetitle', 'MovieController@saveTitle')->name('saveTitle');
+        Route::post('/movie/{id}/edit/savedesc', 'MovieController@saveDesc')->name('saveDesc');
+        Route::post('/movie/{id}/edit/saveimg', 'MovieController@saveImage')->name('saveImage');
+        Route::post('/movie/{id}/edit/savedate', 'MovieController@saveDate')->name('saveDate');
+        Route::post('/movie/{id}/edit/editrole', 'MovieController@editRole')->name('editRole');
+    }
+);

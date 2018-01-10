@@ -8,7 +8,8 @@
                     <img src="{{ $info->photo }}" width="200px" height="300px"><br>
                     <br>
                     <div style="text-align: center">
-                        Production date: {{ $info->prod_date }}
+                        Production date:<br>
+                        {{ $info->prod_date }}
                     </div>
                     <table class="table">
                         <tr>
@@ -42,7 +43,7 @@
             </td>
             <td class="text-center" valign="top" width="90%">
                 <strong style="font-size: 50px; text-align: center;">
-                    {{ $info->title }} <span class="glyphicon glyphicon-edit" style="margin-left: 10px"></span> <span class="glyphicon glyphicon-check" style="margin-left: 10px"></span>
+                    {{ $info->title }} <a href="{{ route('editMovie',[$info->id]) }}"><span class="glyphicon glyphicon-edit" style="margin-left: 10px"></span></a> <span class="glyphicon glyphicon-check" style="margin-left: 10px"></span>
                 </strong>
                 <table class="table" style="margin-top: 40px">
                     <tr>
@@ -75,7 +76,7 @@
                         </th>
                     </tr>
                 </table>
-                <div style="margin-top: 50px">{{ $info->description }}</div>
+                <div style="margin-top: 50px">{{ $info->description }} </div>
                 <div class="text-left" style="margin-top: 40px">
                     <b>Directed by:</b>
                     @foreach($directors as $i=>$director)

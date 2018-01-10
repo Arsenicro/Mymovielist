@@ -11408,3 +11408,9 @@ button.close {
   margin-right: 10%;
 }
 
+label,
+textarea {
+  display: inline-block;
+  vertical-align: middle;
+}
+

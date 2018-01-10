@@ -86,4 +86,19 @@ class Person
 
         return $edge != null ? $edge->role : null;
     }
+
+    public function saveRole(Movie $movie, $role)
+    {
+        $person     = $this->neo4jPerson;
+        $neo4jMovie = $movie->getNeo4jMovie();
+        $edge       = $person->isStar()->edge($neo4jMovie);
+
+        if ($edge != null) {
+            $edge->role = $role;
+            $edge->save();
+            return true;
+        }
+
+        return false;
+    }
 }
