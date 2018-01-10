@@ -14,7 +14,7 @@
                     <table class="table">
                         <tr>
                             <th colspan="3" class="text-center">
-                                <b>Reviews</b> <span class="glyphicon glyphicon-plus-sign" style="margin-left: 10px"></span>
+                                <b>Reviews</b> <a href="{{ route('newReview',[$info->id]) }}"><span class="glyphicon glyphicon-plus-sign" style="margin-left: 10px"></span></a>
                             </th>
                         </tr>
                         <tr>
@@ -44,17 +44,28 @@
             <td class="text-center" valign="top" width="90%">
                 <div style="margin-left: 5%">
                     <strong style="font-size: 50px; text-align: center;">
-                        {{ $info->title }} <a href="{{ route('editMovie',[$info->id]) }}"><span class="glyphicon glyphicon-edit" style="margin-left: 10px"></span></a> <span class="glyphicon glyphicon-check" style="margin-left: 10px"></span>
+                        {{ $info->title }} <a href="{{ route('editMovie',[$info->id]) }}"><span class="glyphicon glyphicon-edit" style="margin-left: 10px"></span></a>
+                        <form action="{{ action('MovieController@likeOrNot',[$info->id]) }}" id="likeOrNot"
+                              method="post" style="display: inline-block">
+                            {{ csrf_field() }}
+                            <a href="#" onclick="document.getElementById('likeOrNot').submit()">
+                                @if($liked)
+                                    <span class="fa fa-thumbs-down" style="margin-left: 10px"></span>
+                                @else
+                                    <span class="fa fa-thumbs-up" style="margin-left: 10px"></span>
+                                @endif
+                            </a>
+                        </form>
                     </strong>
                     <table class="table" style="margin-top: 40px">
                         <tr>
                             <th class="text-center" width="10%">
                                 Score
                             </th>
-                            <th class="text-center" width="10%">
+                            <th class="text-center" width="15%">
                                 Your Score
                             </th>
-                            <th class="text-center border" width="80%">
+                            <th class="text-center border" width="75%">
                                 Genres
                             </th>
                         </tr>
@@ -64,7 +75,23 @@
                                 <span style="font-size: 15px">{{ $info->number_of_scores }} users</span>
                             </th>
                             <th class="text-center" style="vertical-align: middle">
-                                {{ $userscore }}
+                                <form action="{{ action('MovieController@saveScore',[$info->id]) }}" id="saveScore"
+                                      method="post" style="display: inline-block">
+                                    {{ csrf_field() }}
+                                    <select class="form-control" name="score">
+                                        <option>N/A</option>
+                                        @for($i = 1; $i <= 10; $i++)
+                                            @if($userscore == $i)
+                                                <option selected="selected">{{ $i }}</option>
+                                            @else
+                                                <option>{{ $i }}</option>
+                                            @endif
+                                        @endfor
+                                    </select>
+                                    <a href="#" onclick="document.getElementById('saveScore').submit()">
+                                        <span class="glyphicon glyphicon-floppy-disk" style="margin-left: 10px"></span>
+                                    </a>
+                                </form>
                             </th>
                             <th class="text-center" style="vertical-align: middle">
                                 @foreach($genres as $i=>$genre)

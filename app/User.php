@@ -31,8 +31,7 @@ class User
 
     public function canEdit()
     {
-        if($this->sqlUser->access == "m" || $this->sqlUser->access == "a")
-        {
+        if ($this->sqlUser->access == "m" || $this->sqlUser->access == "a") {
             return true;
         }
 
@@ -109,7 +108,45 @@ class User
     {
         $user = $this->getNeo4jUser();
 
-        $user->like()->save($movie->getNeo4jMovie());
+        if (!$this->liked($movie)) {
+            return $user->like()->save($movie->getNeo4jMovie()) != null;
+        }
+
+        return false;
+    }
+
+    public function deleteLike(Movie $movie)
+    {
+        if ($this->liked($movie)) {
+            $user = $this->getNeo4jUser();
+            $edge = $user->like()->edge($movie->getNeo4jMovie());
+
+            $edge->delete();
+            return true;
+        }
+
+        return false;
+    }
+
+    public function liked(Movie $movie)
+    {
+        $user = $this->getNeo4jUser();
+        $edge = $user->like()->edge($movie->getNeo4jMovie());
+
+        return $edge != null;
+    }
+
+    public function revived(Movie $movie)
+    {
+        $reviews = $this->getReviews();
+        foreach ($reviews as $review) {
+            $review = new Review($review->rid);
+            if ($movie->getMovieInfo()->id == $review->getMovie()->mid) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getLikedMovies()
@@ -137,9 +174,29 @@ class User
     public function score(Movie $movie, $score)
     {
         $user = $this->getNeo4jUser();
-        $user->score()->save($movie->getNeo4jMovie(), ['score' => $score]);
+        return $user->score()->save($movie->getNeo4jMovie(), ['score' => $score]) != null &&
+            $movie->newScore($score) != null;
+    }
 
-        $movie->newScore($score);
+    public function deleteScore(Movie $movie)
+    {
+        $user = $this->getNeo4jUser();
+        $edge = $user->score()->edge($movie->getNeo4jMovie());
+
+        if ($edge != null) {
+            $edge->delete();
+            return $movie->unScore($edge->score);
+        }
+
+        return false;
+    }
+
+    public function scored(Movie $movie)
+    {
+        $user = $this->getNeo4jUser();
+        $edge = $user->score()->edge($movie->getNeo4jMovie());
+
+        return $edge != null;
     }
 
     public function getScoredMovies()

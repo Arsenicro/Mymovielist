@@ -16,9 +16,11 @@ DB::listen(function($query){
     var_dump($query->sql);
 });*/
 
-Route::get('/', function () {
+Route::get(
+    '/', function () {
     return view('welcome');
-});
+}
+);
 
 Auth::routes();
 
@@ -46,5 +48,15 @@ Route::middleware('mod')->group(
         Route::post('/movie/{id}/edit/newwriter', 'MovieController@newWriter')->name('newWriter');
         Route::post('/movie/{id}/edit/deletewriter', 'MovieController@deleteWriter')->name('deleteWriter');
         Route::post('/movie/{id}/edit/deletemovie', 'MovieController@deleteMovie')->name('deleteMovie');
+    }
+);
+
+Route::middleware('auth')->group(
+    function () {
+        Route::post('/movie/{id}/edit/savescore', 'MovieController@saveScore')->name('saveScore');
+        Route::post('/movie/{id}/edit/likeornot', 'MovieController@likeOrNot')->name('likeOrNot');
+        Route::get('/movie/{id}/newreview', 'ReviewController@newReview')->name('newReview');
+        Route::post('/movie/{id}/createreview', 'ReviewController@createReview')->name('createReview');
+
     }
 );

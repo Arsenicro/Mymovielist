@@ -4,9 +4,8 @@ namespace Mymovielist\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use Mymovielist\User;
 
-class Moderator
+class AuthUser
 {
     /**
      * Handle an incoming request.
@@ -18,13 +17,9 @@ class Moderator
     public function handle($request, Closure $next)
     {
         if (Auth::user() != null) {
-            $user = new User(Auth::user()->login);
-
-            if ($user->canEdit()) {
-                return $next($request);
-            }
+            return $next($request);
         }
 
-        return \redirect()->back()->with('error',"You don't have access to this page" );
+        return \redirect()->back()->with('error', "You are not logged in!");
     }
 }

@@ -31,14 +31,16 @@ class Review
     {
         $sqlReview   = SQLReview::create($data);
         $neo4jReview = NEO4JReview::create(['rid' => $sqlReview->id]);
+        $user        = new User($login);
+        $movie       = new Movie($mid);
 
-        $user  = User::getNeo4jUser($login);
-        $movie = Movie::getNeo4jMovie($mid);
+        $neo4jUser  = $user->getNeo4jUser();
+        $neo4jMovie = $movie->getNeo4jMovie();
 
-        $neo4jReview->wroteBy()->associate($user)->save();
-        $neo4jReview->movie()->associate($movie)->save();
+        $neo4jReview->wroteBy()->associate($neo4jUser)->save();
+        $neo4jReview->movie()->associate($neo4jMovie)->save();
 
-        return new Review($sqlReview->id,$sqlReview,$neo4jReview);
+        return new Review($sqlReview->id, $sqlReview, $neo4jReview);
     }
 
     public function getSqlReview()

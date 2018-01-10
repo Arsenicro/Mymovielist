@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Validation\Rules\In;
 use Mymovielist\Genre;
 use Mymovielist\Movie;
 use Mymovielist\Person;
@@ -28,6 +29,7 @@ class MovieController extends Controller
         $directors = $movie->getDirectors();
         $writers   = $movie->getWriters();
         $reviews   = $movie->getReviews();
+
 
         $reviews = $reviews->map(
             function ($key) {
@@ -64,12 +66,14 @@ class MovieController extends Controller
         if (Auth::user() != null) {
             $user      = new User(Auth::user()->login);
             $userScore = $user->getUserScore($movie);
+            $liked     = $user->liked($movie);
         }
 
         return view(
             'movie',
             [
                 'userscore' => $userScore ?? "N/A",
+                'liked'     => $liked ?? false,
                 'info'      => $info,
                 'genres'    => $genres,
                 'casts'     => $casts,
@@ -267,7 +271,7 @@ class MovieController extends Controller
 
     public function newDirector($mid)
     {
-        $movie = new Movie($mid);
+        $movie  = new Movie($mid);
         $person = new Person(Input::get('pid'));
 
         if ($movie->exist() && $person->exist()) {
@@ -294,7 +298,7 @@ class MovieController extends Controller
 
     public function newWriter($mid)
     {
-        $movie = new Movie($mid);
+        $movie  = new Movie($mid);
         $person = new Person(Input::get('pid'));
 
         if ($movie->exist() && $person->exist()) {
@@ -318,4 +322,44 @@ class MovieController extends Controller
 
         return redirect()->back()->with('error', 'Something went wrong!');
     }
+
+    public function saveScore($mid)
+    {
+        $score = Input::get('score');
+        $movie = new Movie($mid);
+        $user  = new User(Auth::user()->login);
+        $bool  = true;
+
+        if ($score == "N/A") {
+            if ($user->deleteScore($movie)) {
+                return redirect()->back()->with('message', 'Saved');
+            }
+        } elseif ($movie->exist()) {
+            if ($user->scored($movie)) {
+                $bool = $bool && $user->deleteScore($movie);
+            }
+            if ($bool && $user->score($movie, $score)) {
+                return redirect()->back()->with('message', 'Saved');
+            }
+        }
+        return redirect()->back()->with('error', 'Something went wrong!');
+    }
+
+    public function likeOrNot($mid)
+    {
+        $movie = new Movie($mid);
+        $user  = new User(Auth::user()->login);
+
+        if ($user->liked($movie)) {
+            if ($user->deleteLike($movie)) {
+                return redirect()->back()->with('message', 'Deleted');
+            }
+        }
+        if ($user->likeIt($movie)) {
+            return redirect()->back()->with('message', 'Liked');
+        }
+
+        return redirect()->back()->with('error', 'Something went wrong!');
+    }
 }
+

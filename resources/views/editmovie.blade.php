@@ -100,7 +100,7 @@
                                 <form action="{{ action('MovieController@newGenre',[$info->id]) }}" id="newGenre"
                                       method="post" style="display: inline-block">
                                     {{ csrf_field() }}
-                                    <textarea cols="10" , rows="1" name="name"></textarea>
+                                    <textarea cols="10", rows="1" name="name"></textarea>
                                     <a href="#" onclick="document.getElementById('newGenre').submit()">
                                         <span class="glyphicon glyphicon-plus" style="margin-left: 10px"></span>
                                     </a>

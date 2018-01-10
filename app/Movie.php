@@ -122,8 +122,24 @@ class Movie
         $newScore       = ($oldScore + $score) / $numberOfScores;
 
         $movie->number_of_scores = $numberOfScores;
-        $movie->score            = $newScore;
-        $movie->save();
+        $movie->score = $newScore;
+
+        return $movie->save() != null;
+    }
+
+    public function unScore($score)
+    {
+        $movie          = $this->sqlMovie;
+        $numberOfScores = $movie->number_of_scores;
+        $oldScore       = $movie->score * $numberOfScores;
+
+        $numberOfScores -= 1;
+        $newScore       = ($oldScore - $score) / $numberOfScores;
+
+        $movie->number_of_scores = $numberOfScores;
+        $movie->score = $newScore;
+
+        return $movie->save() != null;
     }
 
     public function getReviews()
