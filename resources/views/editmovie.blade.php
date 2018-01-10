@@ -97,7 +97,6 @@
                                         </form>
                                     </span>
                                 @endforeach
-
                                 <form action="{{ action('MovieController@newGenre',[$info->id]) }}" id="newGenre"
                                       method="post" style="display: inline-block">
                                     {{ csrf_field() }}
@@ -119,34 +118,49 @@
                     </div>
                     <div class="text-left" style="margin-top: 40px">
                         <b>Directed by:</b>
-                        @foreach($directors as $i=>$director)
-                            @if($i < count($directors) - 1)
-                                <a href="{{ route('person',[$director['info']->id]) }}">{{ $director['info']->name }} {{ $director['info']->surname }}</a>
-                                <a href="{{ route('movie',[$info->id]) }}"><span class="glyphicon glyphicon-remove"
-                                                                                 style="margin-left: 4px"></span></a>,
-                            @else
-                                <a href="{{ route('person',[$director['info']->id]) }}">{{ $director['info']->name }} {{ $director['info']->surname }}</a>
-                                <a href="{{ route('movie',[$info->id]) }}"><span class="glyphicon glyphicon-remove"
-                                                                                 style="margin-left: 4px"></span></a>
-                            @endif
+                        @foreach($directors as $director)
+                            <span>
+                                <form action="{{ action('MovieController@deleteDirector',[$info->id]) }}"
+                                      id="deleteDirector{{ $director['info']->id }}"
+                                      method="post" style="display: inline-block">
+                                    {{ csrf_field() }}
+                                    <input type="hidden" name="pid" value="{{ $director['info']->id }}">
+                                    <a href="{{ route('person',[$director['info']->id]) }}">{{ $director['info']->name }} {{ $director['info']->surname }}</a>
+                                    <a href="#" onclick="document.getElementById('deleteDirector{{ $director['info']->id }}').submit()"><span
+                                                class="glyphicon glyphicon-remove" style="margin-left: 2px"></span></a>,
+                                </form>
+                            </span>
                         @endforeach
-                        <a href="{{ route('movie',[$info->id]) }}"><span class="glyphicon glyphicon-plus" style="margin-left: 8px"></span></a>
+                        <form action="{{ action('MovieController@newDirector',[$info->id]) }}" id="newDirector"
+                              method="post" style="display: inline-block">
+                            {{ csrf_field() }}
+                            <textarea cols="3" , rows="1" name="pid"></textarea>
+                            <a href="#" onclick="document.getElementById('newDirector').submit()">
+                                <span class="glyphicon glyphicon-plus" style="margin-left: 10px"></span>
+                            </a>
+                        </form>
                         <br>
                         <b>Wrote by:</b>
-                        @foreach($writers as $i=>$writer)
-                            @if($i < count($writers) - 1)
-                                <a href="{{ route('person',[$writer['info']->id]) }}">{{ $writer['info']->name }} {{ $writer['info']->surname }}</a>
-                                <a
-                                        href="{{ route('movie',[$info->id]) }}"><span class="glyphicon glyphicon-remove"
-                                                                                      style="margin-left: 4px"></span></a>,
-                            @else
-                                <a href="{{ route('person',[$writer['info']->id]) }}">{{ $writer['info']->name }} {{ $writer['info']->surname }}</a>
-                                <a
-                                        href="{{ route('movie',[$info->id]) }}"><span class="glyphicon glyphicon-remove"
-                                                                                      style="margin-left: 4px"></span></a>
-                            @endif
+                        @foreach($writers as $writer)
+                            <span>
+                                <form action="{{ action('MovieController@deleteWriter',[$info->id]) }}" id="deleteWriter{{ $writer['info']->id }}"
+                                      method="post" style="display: inline-block">
+                                    {{ csrf_field() }}
+                                    <input type="hidden" name="pid" value="{{ $writer['info']->id }}">
+                                    <a href="{{ route('person',[$writer['info']->id]) }}">{{ $writer['info']->name }} {{ $writer['info']->surname }}</a>
+                                    <a href="#" onclick="document.getElementById('deleteWriter{{ $writer['info']->id }}').submit()"><span
+                                                class="glyphicon glyphicon-remove" style="margin-left: 2px"></span></a>,
+                                </form>
+                            </span>
                         @endforeach
-                        <a href="{{ route('movie',[$info->id]) }}"><span class="glyphicon glyphicon-plus" style="margin-left: 8px"></span></a>
+                        <form action="{{ action('MovieController@newWriter',[$info->id]) }}" id="newWriter"
+                              method="post" style="display: inline-block">
+                            {{ csrf_field() }}
+                            <textarea cols="3" , rows="1" name="pid"></textarea>
+                            <a href="#" onclick="document.getElementById('newWriter').submit()">
+                                <span class="glyphicon glyphicon-plus" style="margin-left: 10px"></span>
+                            </a>
+                        </form>
                     </div>
                     <table class="table" style="margin-top: 50px">
                         <tr>
@@ -173,11 +187,21 @@
                                     </form>
                                 </th>
                                 <th class="text-center" style="vertical-align: middle" width="45%">
+
                                     <a href="{{ route('person',[$cast['info']->id]) }}">{{ $cast['info']->name }} {{ $cast['info']->surname }}</a>
+
                                 </th>
                                 <th class="text-center" style="vertical-align: middle" width="10%">
-                                    <a href="{{ route('movie',[$info->id]) }}"><span class="glyphicon glyphicon-remove"
-                                                                                     style="margin-left: 10px"></span></a>
+                                    <span>
+                                         <form action="{{ action('MovieController@deleteCast',[$info->id]) }}"
+                                               id="deleteCast{{ $cast['info']->id }}"
+                                               method="post" style="display: inline-block">
+                                        {{ csrf_field() }}
+                                             <input type="hidden" name="pid" value="{{ $cast['info']->id }}">
+                                        <a href="#" onclick="document.getElementById('deleteCast{{ $cast['info']->id }}').submit()"><span
+                                                    class="glyphicon glyphicon-remove" style="margin-left: 2px"></span></a>
+                                        </form>
+                                    </span>
                                 </th>
                             </tr>
                         </table>

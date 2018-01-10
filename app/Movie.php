@@ -136,7 +136,25 @@ class Movie
         $movie       = $this->neo4jMovie;
         $neo4jPerson = $person->getNeo4jPerson();
 
+        if($this->getDirectors()->contains($neo4jPerson))
+            return false;
+
         $movie->hasDirectors()->save($neo4jPerson);
+        return true;
+
+    }
+
+    public function deleteDirector(Person $person)
+    {
+        $movie = $this->getNeo4jMovie();
+        $edge = $movie->hasDirectors()->edge($person->getNeo4jPerson());
+
+        if($edge == null)
+            return false;
+
+        $edge->delete();
+
+        return true;
     }
 
     public function wroteBy(Person $person)
@@ -144,7 +162,24 @@ class Movie
         $movie       = $this->neo4jMovie;
         $neo4jPerson = $person->getNeo4jPerson();
 
+        if($this->getWriters()->contains($neo4jPerson))
+            return false;
+
         $movie->hasWriters()->save($neo4jPerson);
+        return true;
+    }
+
+    public function deleteWriter(Person $person)
+    {
+        $movie = $this->getNeo4jMovie();
+        $edge = $movie->hasWriters()->edge($person->getNeo4jPerson());
+
+        if($edge == null)
+            return false;
+
+        $edge->delete();
+
+        return true;
     }
 
     public function newStar(Person $person, $role)
@@ -152,7 +187,25 @@ class Movie
         $movie       = $this->neo4jMovie;
         $neo4jPerson = $person->getNeo4jPerson();
 
+        if($this->getStars()->contains($neo4jPerson))
+            return false;
+
         $movie->hasStars()->save($neo4jPerson, ['role' => $role]);
+        return true;
+
+    }
+
+    public function deleteStar(Person $person)
+    {
+        $movie = $this->getNeo4jMovie();
+        $edge = $movie->hasStars()->edge($person->getNeo4jPerson());
+
+        if($edge == null)
+            return false;
+
+        $edge->delete();
+
+        return true;
     }
 
     public function getStars()

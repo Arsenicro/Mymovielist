@@ -223,17 +223,17 @@ class MovieController extends Controller
         return redirect()->back()->with('error', 'Something went wrong!');
     }
 
-    public function deleteGenre($mid)
+    public function deleteCast($mid)
     {
-        $movie = new Movie($mid);
-        $name  = Input::get('name');
-        $genre = new Genre($name);
+        $movie  = new Movie($mid);
+        $person = new Person(Input::get('pid'));
 
-        if ($movie->exist() && $genre->exist()) {
-            if ($movie->deleteGenre($genre)) {
-                return redirect()->back()->with('message', 'Deleted');
+        if ($movie->exist() && $person->exist()) {
+            if ($movie->deleteStar($person)) {
+                return redirect()->back()->with('message', 'Saved');
             }
         }
+
         return redirect()->back()->with('error', 'Something went wrong!');
     }
 
@@ -248,6 +248,74 @@ class MovieController extends Controller
                 return redirect()->back()->with('message', 'Saved');
             }
         }
+        return redirect()->back()->with('error', 'Something went wrong!');
+    }
+
+    public function deleteGenre($mid)
+    {
+        $movie = new Movie($mid);
+        $name  = Input::get('name');
+        $genre = new Genre($name);
+
+        if ($movie->exist() && $genre->exist()) {
+            if ($movie->deleteGenre($genre)) {
+                return redirect()->back()->with('message', 'Deleted');
+            }
+        }
+        return redirect()->back()->with('error', 'Something went wrong!');
+    }
+
+    public function newDirector($mid)
+    {
+        $movie = new Movie($mid);
+        $person = new Person(Input::get('pid'));
+
+        if ($movie->exist() && $person->exist()) {
+            if ($movie->directedBy($person)) {
+                return redirect()->back()->with('message', 'Saved');
+            }
+        }
+        return redirect()->back()->with('error', 'Something went wrong!');
+    }
+
+    public function deleteDirector($mid)
+    {
+        $movie  = new Movie($mid);
+        $person = new Person(Input::get('pid'));
+
+        if ($movie->exist() && $person->exist()) {
+            if ($movie->deleteDirector($person)) {
+                return redirect()->back()->with('message', 'Saved');
+            }
+        }
+
+        return redirect()->back()->with('error', 'Something went wrong!');
+    }
+
+    public function newWriter($mid)
+    {
+        $movie = new Movie($mid);
+        $person = new Person(Input::get('pid'));
+
+        if ($movie->exist() && $person->exist()) {
+            if ($movie->wroteBy($person)) {
+                return redirect()->back()->with('message', 'Saved');
+            }
+        }
+        return redirect()->back()->with('error', 'Something went wrong!');
+    }
+
+    public function deleteWriter($mid)
+    {
+        $movie  = new Movie($mid);
+        $person = new Person(Input::get('pid'));
+
+        if ($movie->exist() && $person->exist()) {
+            if ($movie->deleteWriter($person)) {
+                return redirect()->back()->with('message', 'Saved');
+            }
+        }
+
         return redirect()->back()->with('error', 'Something went wrong!');
     }
 }

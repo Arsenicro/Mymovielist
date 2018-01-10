@@ -38,7 +38,13 @@ Route::middleware('mod')->group(
         Route::post('/movie/{id}/edit/savedate', 'MovieController@saveDate')->name('saveDate');
         Route::post('/movie/{id}/edit/editrole', 'MovieController@editRole')->name('editRole');
         Route::post('/movie/{id}/edit/newcast', 'MovieController@newCast')->name('newCast');
+        Route::post('/movie/{id}/edit/deletecast', 'MovieController@deleteCast')->name('deleteCast');
         Route::post('/movie/{id}/edit/newgenre', 'MovieController@newGenre')->name('newGenre');
         Route::post('/movie/{id}/edit/deletegenre', 'MovieController@deleteGenre')->name('deleteGenre');
+        Route::post('/movie/{id}/edit/newdirector', 'MovieController@newDirector')->name('newDirector');
+        Route::post('/movie/{id}/edit/deletedirector', 'MovieController@deleteDirector')->name('deleteDirector');
+        Route::post('/movie/{id}/edit/newwriter', 'MovieController@newWriter')->name('newWriter');
+        Route::post('/movie/{id}/edit/deletewriter', 'MovieController@deleteWriter')->name('deleteWriter');
+        Route::post('/movie/{id}/edit/deletemovie', 'MovieController@deleteMovie')->name('deleteMovie');
     }
 );
