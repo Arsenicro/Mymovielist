@@ -32,11 +32,12 @@ class Movie
     {
         $sqlMovie   = SQLMovie::create($data);
         $neo4jMovie = NEO4JMovie::create(['mid' => $sqlMovie->id]);
+        $movie = new Movie($sqlMovie->id, $sqlMovie, $neo4jMovie);
         foreach ($genres as $genre) {
-            $neo4jMovie->isGenre()->save(Genre::getNeo4jGenre($genre));
+            $movie->saveGenre($genre);
         }
 
-        return new Movie($sqlMovie->id, $sqlMovie, $neo4jMovie);
+        return $movie;
     }
 
     public function save(array $data)
@@ -77,6 +78,28 @@ class Movie
     public function getGenres()
     {
         return $this->neo4jMovie->isGenre()->get();
+    }
+
+    public function saveGenre(Genre $genre)
+    {
+        $neo4jMovie = $this->getNeo4jMovie();
+        $neo4jGenre = $genre->getNeo4jGenre();
+        if($this->getGenres()->contains($neo4jGenre))
+            return false;
+        return $neo4jMovie->isGenre()->save($neo4jGenre) != null;
+    }
+
+    public function deleteGenre(Genre $genre)
+    {
+        $movie = $this->getNeo4jMovie();
+        $edge = $movie->isGenre()->edge($genre->getNeo4jGenre());
+
+        if($edge == null)
+            return false;
+
+        $edge->delete();
+
+        return true;
     }
 
     public function getLikers()

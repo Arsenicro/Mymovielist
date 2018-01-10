@@ -8,7 +8,7 @@ use Mymovielist\Movie;
 
 class ListController extends Controller
 {
-    public function index()
+    public function movie()
     {
         $movies = Movie::getMoviesInfo(['id','title','score','photo','prod_date']);
         if(Input::get('order') == 'asc')
@@ -16,6 +16,6 @@ class ListController extends Controller
         elseif (Input::get('order') == 'desc')
             $movies = $movies->sortByDesc(Input::get('sortby'));
 
-        return view('list', ['movies' => $movies]);
+        return view('movielist', ['movies' => $movies]);
     }
 }

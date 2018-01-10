@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Mymovielist\Genre;
 use Mymovielist\Movie;
 use Mymovielist\Person;
 use Mymovielist\Review;
@@ -174,7 +175,7 @@ class MovieController extends Controller
         if ($img == '') {
             return redirect()->back()->with('error', 'Not a valid image link');
         }
-        $movie->save(['image' => $img]);
+        $movie->save(['photo' => $img]);
         return redirect()->back()->with('message', 'Saved');
     }
 
@@ -198,11 +199,55 @@ class MovieController extends Controller
         $person = new Person($personId);
         $movie  = new Movie($mid);
 
-        if($person->saveRole($movie, $role))
-        {
+        if ($person->saveRole($movie, $role)) {
             return redirect()->back()->with('message', 'Saved');
         }
 
+        return redirect()->back()->with('error', 'Something went wrong!');
+    }
+
+    public function newCast($mid)
+    {
+        $role     = Input::get('role');
+        $personId = Input::get('personid');
+
+        $person = new Person($personId);
+        $movie  = new Movie($mid);
+        if ($person->exist()) {
+            if ($person->getRole($movie) == null) {
+                $movie->newStar($person, $role);
+                return redirect()->back()->with('message', 'Saved');
+            }
+        }
+
+        return redirect()->back()->with('error', 'Something went wrong!');
+    }
+
+    public function deleteGenre($mid)
+    {
+        $movie = new Movie($mid);
+        $name  = Input::get('name');
+        $genre = new Genre($name);
+
+        if ($movie->exist() && $genre->exist()) {
+            if ($movie->deleteGenre($genre)) {
+                return redirect()->back()->with('message', 'Deleted');
+            }
+        }
+        return redirect()->back()->with('error', 'Something went wrong!');
+    }
+
+    public function newGenre($mid)
+    {
+        $movie = new Movie($mid);
+        $name  = Input::get('name');
+        $genre = new Genre($name);
+
+        if ($movie->exist() && $genre->exist()) {
+            if ($movie->saveGenre($genre)) {
+                return redirect()->back()->with('message', 'Saved');
+            }
+        }
         return redirect()->back()->with('error', 'Something went wrong!');
     }
 }

@@ -23,7 +23,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/list', 'ListController@index')->name('list');
+Route::get('/list', 'ListController@movie')->name('movielist');
 Route::get('/movie/{id}', 'MovieController@movie')->name('movie');
 Route::get('/movie/{mid}/review/{rid}', 'ReviewController@review')->name('review');
 Route::get('/person/{pid}', 'PersonController@person')->name('person');
@@ -37,5 +37,8 @@ Route::middleware('mod')->group(
         Route::post('/movie/{id}/edit/saveimg', 'MovieController@saveImage')->name('saveImage');
         Route::post('/movie/{id}/edit/savedate', 'MovieController@saveDate')->name('saveDate');
         Route::post('/movie/{id}/edit/editrole', 'MovieController@editRole')->name('editRole');
+        Route::post('/movie/{id}/edit/newcast', 'MovieController@newCast')->name('newCast');
+        Route::post('/movie/{id}/edit/newgenre', 'MovieController@newGenre')->name('newGenre');
+        Route::post('/movie/{id}/edit/deletegenre', 'MovieController@deleteGenre')->name('deleteGenre');
     }
 );
