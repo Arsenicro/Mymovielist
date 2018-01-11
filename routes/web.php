@@ -25,7 +25,9 @@ Route::get(
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/list', 'ListController@movie')->name('movielist');
+Route::get('/movielist', 'ListController@movie')->name('movielist');
+Route::get('/personlist', 'ListController@person')->name('personlist');
+Route::get('/userlist', 'ListController@user')->name('userlist');
 Route::get('/movie/{id}', 'MovieController@movie')->name('movie');
 Route::get('/movie/{mid}/review/{rid}', 'ReviewController@review')->name('review');
 Route::get('/person/{pid}', 'PersonController@person')->name('person');

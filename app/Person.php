@@ -63,6 +63,11 @@ class Person
         return $this->neo4jPerson->hasFan()->get();
     }
 
+    public function numberOfFans()
+    {
+        return $this->getNeo4jPerson()->hasFan()->get()->count();
+    }
+
     public function wrote()
     {
         return $this->neo4jPerson->isWriter()->get();

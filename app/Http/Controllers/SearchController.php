@@ -7,21 +7,78 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Mymovielist\Genre;
 use Mymovielist\Movie;
+use Mymovielist\Person;
 use Mymovielist\User;
 
 class SearchController extends Controller
 {
     public function search()
     {
-        $title     = Input::get('title');
-        $genres    = Input::get('genres');
-        $allGenres = Genre::getAllGenres();
-        $watched   = Input::get('watched') != null;
+        $text         = Input::get('search');
+        $genres       = Input::get('genres');
+        $allGenres    = Genre::getAllGenres();
+        $watched      = Input::get('watched') == "on";
+        $searchMovie  = Input::get('searching') == "movie";
+        $searchUser   = Input::get('searching') == "user";
+        $searchPeople = Input::get('searching') == "people";
+        $result       = null;
 
-        if ($genres == null && $title == null) {
-            return view('search', ['genres' => $allGenres, 'inputTitle' => null, 'inputGenre' => null, 'searched' => false, 'watched' => $watched]);
+        $get   = "";
+        $input = Input::get();
+        foreach ($input as $i => $item) {
+            if ($i !== "sortby" && $i !== "order") {
+                $get .= "&" . $i . "=" . $item;
+            }
+        }
+
+        if ($genres == null && $text == null) {
+            return view(
+                'list', [
+                    'result'     => '',
+                    'genres'     => $allGenres,
+                    'inputTitle' => null,
+                    'inputGenre' => null,
+                    'watched'    => $watched,
+                    'search'     => true,
+                    'userList'   => false,
+                    'movieList'  => false,
+                    'personList' => false,
+                    'get'        => $get
+                ]
+            );
 
         }
+
+        if($searchMovie)
+            $result = $this->searchMovie($text, $genres, $watched);
+        elseif ($searchUser)
+            $result = $this->searchUser($text);
+        elseif ($searchPeople)
+            $result = $this->searchPerson($text);
+        else
+            return redirect('/search')->with('error','Something went wrong');
+
+        $result = ListController::sort(Input::get('order'), Input::get('sortby'), $result);
+
+        return view(
+            'list',
+            [
+                'genres'     => $allGenres,
+                'result'     => $result,
+                'inputTitle' => $text,
+                'inputGenre' => $genres,
+                'search'     => true,
+                'watched'    => $watched,
+                'movieList'  => $searchMovie,
+                'userList'   => $searchUser,
+                'personList' => $searchPeople,
+                'get'        => $get
+            ]
+        );
+    }
+
+    private function searchMovie($title, $genres, $watched)
+    {
         if ($title == "" || $title == null) {
             $movies = Movie::getMoviesInfo(['id', 'title', 'score', 'photo', 'prod_date']);
         } else {
@@ -42,7 +99,7 @@ class SearchController extends Controller
         }
 
         if (Auth::user() != null && !$watched) {
-            $movies  = $movies->filter(
+            $movies = $movies->filter(
                 function ($key) {
                     $movie = new Movie($key->id);
                     $user  = new User(Auth::user()->login);
@@ -51,15 +108,44 @@ class SearchController extends Controller
             );
         }
 
-        if (Input::get('order') == 'asc') {
-            $movies = $movies->sortBy(Input::get('sortby'));
-        } elseif (Input::get('order') == 'desc') {
-            $movies = $movies->sortByDesc(Input::get('sortby'));
+        return $movies;
+    }
+
+    private function searchPerson($text)
+    {
+        if ($text == "" || $text == null) {
+            $persons = Person::getPersonsInfo();
+        } else {
+            $persons = Person::getPersonsInfo()->filter(
+                function ($key) use ($text) {
+                    return strpos($key->name . " " . $key->surname, $text) !== false;
+                }
+            );
         }
 
-        return view(
-            'search',
-            ['genres' => $allGenres, 'movies' => $movies, 'inputTitle' => $title, 'inputGenre' => $genres, 'searched' => true, 'watched' => $watched]
+        $persons = $persons->map(
+            function ($key) {
+                $person    = new Person($key->id);
+                $key->fans = $person->numberOfFans();
+                return $key;
+            }
         );
+
+        return $persons;
+    }
+
+    private function searchUser($login)
+    {
+        if ($login == "" || $login == null) {
+            $users = User::getUsersInfo(['login', 'avatar']);
+        } else {
+            $users = User::getUsersInfo(['login', 'avatar'])->filter(
+                function ($key) use ($login) {
+                    return strpos($key->login, $login) !== false;
+                }
+            );
+        }
+
+        return $users;
     }
 }

@@ -1,45 +1,45 @@
 @section('list')
         <table class="table table-striped" width="100%">
             <tr>
-                <th width="70%" style="text-align: center">
-                    Title
-                    <a href="?sortby=title&order=asc{{ $get }}">
+                <th width="45%" style="text-align: center">
+                    Name
+                    <a href="?sortby=name&order=asc{{ $get }}">
                         <span class="glyphicon glyphicon-sort-by-order-alt"></span>
                     </a>
-                    <a href="?sortby=title&order=desc{{ $get }}">
+                    <a href="?sortby=name&order=desc{{ $get }}">
                         <span class="glyphicon glyphicon-sort-by-order"></span>
                     </a>
                 </th>
-                <th width="20%" style="text-align: center">
-                    Production date
-                    <a href="?sortby=prod_date&order=asc{{ $get }}">
+                <th width="45%" style="text-align: center">
+                    Surname
+                    <a href="?sortby=surname&order=asc{{ $get }}">
                         <span class="glyphicon glyphicon-sort-by-order-alt"></span>
                     </a>
-                    <a href="?sortby=prod_date&order=desc{{ $get }}">
+                    <a href="?sortby=surname&order=desc{{ $get }}">
                         <span class="glyphicon glyphicon-sort-by-order"></span>
                     </a>
                 </th>
                 <th width="10%" style="text-align: center">
-                    Score
-                    <a href="?sortby=score&order=asc{{ $get }}">
+                    Number of Fans
+                    <a href="?sortby=fans&order=asc{{ $get }}">
                         <span class="glyphicon glyphicon-sort-by-order-alt"></span>
                     </a>
-                    <a href="?sortby=score&order=desc{{ $get }}">
+                    <a href="?sortby=fans&order=desc{{ $get }}">
                         <span class="glyphicon glyphicon-sort-by-order"></span>
                     </a>
                 </th>
             </tr>
-            @foreach($movies as $movie)
+            @foreach($persons as $person)
                 <tr>
                     <th>
-                        <img src="{{ $movie->photo }}" width="120px" height="120px" style="float: left; margin-right: 20px">
-                        <a href="{{ route('movie',[$movie->id]) }}">{{ $movie->title }}</a>
+                        <img src="{{ $person->photo }}" width="120px" height="120px" style="float: left; margin-right: 20px">
+                        <a href="{{ route('person',[$person->id]) }}">{{ $person->name }}</a>
                     </th>
                     <th style="text-align: center">
-                        <i>{{ $movie->prod_date }}</i>
+                        <a href="{{ route('person',[$person->id]) }}">{{ $person->surname }}</a>
                     </th>
                     <th style="text-align: center">
-                        {{ $movie->score }}
+                        {{ $person->fans }}
                     </th>
                 </tr>
             @endforeach
