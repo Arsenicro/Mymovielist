@@ -28,16 +28,37 @@ class Movie
         return true;
     }
 
+    public static function titleExists($title)
+    {
+        $movies = Movie::getMoviesInfo(['title']);
+        foreach ($movies as $movie) {
+            if ($movie->title == $title) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static function create(array $data, array $genres)
     {
         $sqlMovie   = SQLMovie::create($data);
         $neo4jMovie = NEO4JMovie::create(['mid' => $sqlMovie->id]);
-        $movie = new Movie($sqlMovie->id, $sqlMovie, $neo4jMovie);
+        $movie      = new Movie($sqlMovie->id, $sqlMovie, $neo4jMovie);
         foreach ($genres as $genre) {
             $movie->saveGenre($genre);
         }
 
         return $movie;
+    }
+
+    public function delete()
+    {
+        if (!$this->exist()) {
+            return false;
+        }
+
+        return $this->getSqlMovie()->delete() && $this->getNeo4jMovie()->delete();
     }
 
     public function save(array $data)
@@ -84,18 +105,20 @@ class Movie
     {
         $neo4jMovie = $this->getNeo4jMovie();
         $neo4jGenre = $genre->getNeo4jGenre();
-        if($this->getGenres()->contains($neo4jGenre))
+        if ($this->getGenres()->contains($neo4jGenre)) {
             return false;
+        }
         return $neo4jMovie->isGenre()->save($neo4jGenre) != null;
     }
 
     public function deleteGenre(Genre $genre)
     {
         $movie = $this->getNeo4jMovie();
-        $edge = $movie->isGenre()->edge($genre->getNeo4jGenre());
+        $edge  = $movie->isGenre()->edge($genre->getNeo4jGenre());
 
-        if($edge == null)
+        if ($edge == null) {
             return false;
+        }
 
         $edge->delete();
 
@@ -122,7 +145,7 @@ class Movie
         $newScore       = ($oldScore + $score) / $numberOfScores;
 
         $movie->number_of_scores = $numberOfScores;
-        $movie->score = $newScore;
+        $movie->score            = $newScore;
 
         return $movie->save() != null;
     }
@@ -137,7 +160,7 @@ class Movie
         $newScore       = ($oldScore - $score) / $numberOfScores;
 
         $movie->number_of_scores = $numberOfScores;
-        $movie->score = $newScore;
+        $movie->score            = $newScore;
 
         return $movie->save() != null;
     }
@@ -152,8 +175,9 @@ class Movie
         $movie       = $this->neo4jMovie;
         $neo4jPerson = $person->getNeo4jPerson();
 
-        if($this->getDirectors()->contains($neo4jPerson))
+        if ($this->getDirectors()->contains($neo4jPerson)) {
             return false;
+        }
 
         $movie->hasDirectors()->save($neo4jPerson);
         return true;
@@ -163,10 +187,11 @@ class Movie
     public function deleteDirector(Person $person)
     {
         $movie = $this->getNeo4jMovie();
-        $edge = $movie->hasDirectors()->edge($person->getNeo4jPerson());
+        $edge  = $movie->hasDirectors()->edge($person->getNeo4jPerson());
 
-        if($edge == null)
+        if ($edge == null) {
             return false;
+        }
 
         $edge->delete();
 
@@ -178,8 +203,9 @@ class Movie
         $movie       = $this->neo4jMovie;
         $neo4jPerson = $person->getNeo4jPerson();
 
-        if($this->getWriters()->contains($neo4jPerson))
+        if ($this->getWriters()->contains($neo4jPerson)) {
             return false;
+        }
 
         $movie->hasWriters()->save($neo4jPerson);
         return true;
@@ -188,10 +214,11 @@ class Movie
     public function deleteWriter(Person $person)
     {
         $movie = $this->getNeo4jMovie();
-        $edge = $movie->hasWriters()->edge($person->getNeo4jPerson());
+        $edge  = $movie->hasWriters()->edge($person->getNeo4jPerson());
 
-        if($edge == null)
+        if ($edge == null) {
             return false;
+        }
 
         $edge->delete();
 
@@ -203,8 +230,9 @@ class Movie
         $movie       = $this->neo4jMovie;
         $neo4jPerson = $person->getNeo4jPerson();
 
-        if($this->getStars()->contains($neo4jPerson))
+        if ($this->getStars()->contains($neo4jPerson)) {
             return false;
+        }
 
         $movie->hasStars()->save($neo4jPerson, ['role' => $role]);
         return true;
@@ -214,10 +242,11 @@ class Movie
     public function deleteStar(Person $person)
     {
         $movie = $this->getNeo4jMovie();
-        $edge = $movie->hasStars()->edge($person->getNeo4jPerson());
+        $edge  = $movie->hasStars()->edge($person->getNeo4jPerson());
 
-        if($edge == null)
+        if ($edge == null) {
             return false;
+        }
 
         $edge->delete();
 

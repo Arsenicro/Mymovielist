@@ -31,6 +31,15 @@ class Genre
         return new Genre($data['name'], $neo4jGenre);
     }
 
+    public function delete()
+    {
+        if (!$this->exist()) {
+            return false;
+        }
+
+        return $this->getNeo4jGenre()->delete();
+    }
+
     public function getNeo4jGenre()
     {
         return $this->neo4jGenre ?? NEO4JGenre::where('name', $this->name)->first();

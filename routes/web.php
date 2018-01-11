@@ -25,9 +25,9 @@ Route::get(
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/movielist', 'ListController@movie')->name('movielist');
-Route::get('/personlist', 'ListController@person')->name('personlist');
-Route::get('/userlist', 'ListController@user')->name('userlist');
+Route::get('/movielist', 'ListController@movie')->name('movieList');
+Route::get('/personlist', 'ListController@person')->name('personList');
+Route::get('/userlist', 'ListController@user')->name('userList');
 Route::get('/movie/{id}', 'MovieController@movie')->name('movie');
 Route::get('/movie/{mid}/review/{rid}', 'ReviewController@review')->name('review');
 Route::get('/person/{pid}', 'PersonController@person')->name('person');
@@ -36,6 +36,7 @@ Route::get('/search', 'SearchController@search')->name('search');
 
 Route::middleware('mod')->group(
     function () {
+        //Edit movie
         Route::get('/movie/{id}/edit', 'MovieController@edit')->name('editMovie');
         Route::post('/movie/{id}/edit/savetitle', 'MovieController@saveTitle')->name('saveTitle');
         Route::post('/movie/{id}/edit/savedesc', 'MovieController@saveDesc')->name('saveDesc');
@@ -50,7 +51,14 @@ Route::middleware('mod')->group(
         Route::post('/movie/{id}/edit/deletedirector', 'MovieController@deleteDirector')->name('deleteDirector');
         Route::post('/movie/{id}/edit/newwriter', 'MovieController@newWriter')->name('newWriter');
         Route::post('/movie/{id}/edit/deletewriter', 'MovieController@deleteWriter')->name('deleteWriter');
-        Route::post('/movie/{id}/edit/deletemovie', 'MovieController@deleteMovie')->name('deleteMovie');
+        Route::get('/movie/{id}/edit/deletemovie', 'MovieController@deleteMovie')->name('deleteMovie');
+
+        //Adding
+        Route::get('/adding', 'AddingController@index')->name('adding');
+        Route::post('/adding/addperson', 'AddingController@addPerson')->name('addingPerson');
+        Route::post('/adding/addmovie', 'AddingController@addMovie')->name('addingMovie');
+        Route::post('/adding/addgenre', 'AddingController@addGenre')->name('addingGenre');
+        Route::post('/adding/deletegenre', 'AddingController@deleteGenre')->name('deleteGenre');
     }
 );
 

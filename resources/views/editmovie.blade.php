@@ -56,7 +56,9 @@
                 <div style="margin-left: 5%">
                     <strong style="font-size: 50px; text-align: center;">
                         ID: {{ $info->id }} <a href="{{ route('movie',[$info->id]) }}"><span class="glyphicon glyphicon-ok"
-                                                                                             style="margin-left: 10px"></span></a><br>
+                                                                                             style="margin-left: 10px"></span></a>
+                        <a href="{{ route('deleteMovie',[$info->id]) }}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-erase"
+                                                                         style="margin-left: 10px"></span></a><br>
                         <form action="{{ action('MovieController@saveTitle',[$info->id]) }}" id="titleSubmit" method="post">
                             {{ csrf_field() }}
                             <textarea class="text-center" rows="1" name="title">{{ $info->title }}</textarea><a

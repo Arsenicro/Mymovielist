@@ -3,10 +3,8 @@
 namespace Mymovielist\Http\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Validation\Rules\In;
 use Mymovielist\Genre;
 use Mymovielist\Movie;
 use Mymovielist\Person;
@@ -360,6 +358,17 @@ class MovieController extends Controller
         }
 
         return redirect()->back()->with('error', 'Something went wrong!');
+    }
+
+    public function deleteMovie($mid)
+    {
+        $movie = new Movie($mid);
+        if ($movie->exist() && $movie->delete()) {
+            return redirect()->route('movieList')->with('message', 'Deleted!');
+        }
+
+        return redirect()->back()->with('error', 'Something went wrong!');
+
     }
 }
 

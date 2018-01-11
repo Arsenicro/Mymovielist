@@ -27,6 +27,14 @@ class Review
         return true;
     }
 
+    public function delete()
+    {
+        if (!$this->exist()) {
+            return false;
+        }
+        return $this->getNeo4jReview()->delete() && $this->getSqlReview()->delete();
+    }
+
     public static function create(array $data, $mid, $login)
     {
         $sqlReview   = SQLReview::create($data);

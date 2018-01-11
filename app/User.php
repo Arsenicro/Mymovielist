@@ -46,6 +46,21 @@ class User
         return new User($sqlUser->login, $sqlUser, $neo4jUser);
     }
 
+    public function delete()
+    {
+        if ($this->exist()) {
+            return false;
+        }
+
+        $reviews = $this->getReviews();
+        foreach ($reviews as $review) {
+            $review = new Review($review->id);
+            $review->delete();
+        }
+
+        return $this->getNeo4jUser()->delete() && $this->getSqlUser()->delete();
+    }
+
     public function getNeo4jUser()
     {
         return $this->neo4jUser ?? NEO4JUser::where('login', $this->login)->first();

@@ -27,12 +27,32 @@ class Person
         return true;
     }
 
+    public static function nameAndSurnameExist($name, $surname)
+    {
+        $persons = Person::getPersonsInfo();
+
+        foreach ($persons as $person) {
+            if ($person->name == $name && $person->surname == $surname) {
+                return true;
+            }
+        }
+    }
+
+    public function delete()
+    {
+        if ($this->exist()) {
+            return false;
+        }
+
+        return $this->getNeo4jPerson()->delete() && $this->getSqlPerson()->delete();
+    }
+
     public static function create(array $data)
     {
         $sqlPerson   = SQLPerson::create($data);
         $neo4jPerson = NEO4JPerson::create(['pid' => $sqlPerson->id]);
 
-        return new Genre($sqlPerson->id, $sqlPerson, $neo4jPerson);
+        return new Person($sqlPerson->id, $sqlPerson, $neo4jPerson);
     }
 
     public function getNeo4jPerson()
