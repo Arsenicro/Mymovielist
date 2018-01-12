@@ -3,6 +3,7 @@
 namespace Mymovielist\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 use Mymovielist\User;
 
 class AuthModOrMe
@@ -16,10 +17,9 @@ class AuthModOrMe
      */
     public function handle($request, Closure $next)
     {
-        dd($request->route('login'));
         if (Auth::user() != null) {
             $user = new User(Auth::user()->login);
-            if ($user->canEdit()) {
+            if ($user->isAdmin() || $request->route('login') == $user->getUserInfo()->login) {
                 return $next($request);
             }
         }

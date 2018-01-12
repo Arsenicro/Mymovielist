@@ -77,12 +77,12 @@ Route::middleware('authModOrMe')->group(
         Route::get('/user/{login}/edit', 'UserController@edit')->name('editUser');
         Route::post('/user/{login}/edit/savename', 'UserController@saveName')->name('saveName');
         Route::post('/user/{login}/edit/savesurname', 'UserController@saveSurname')->name('saveSurname');
-        Route::post('/user/{login}/edit/saveemail', 'UserController@saveEmail')->name('saveEmail');
         Route::post('/user/{login}/edit/saveavatar', 'UserController@saveAvatar')->name('saveAvatar');
         Route::post('/user/{login}/edit/savebirthday', 'UserController@saveBirthday')->name('saveBirthday');
         Route::post('/user/{login}/edit/saveabout', 'UserController@saveAbout')->name('saveAbout');
         Route::post('/user/{login}/edit/savelocation', 'UserController@saveLocation')->name('saveLocation');
         Route::post('/user/{login}/edit/savegender', 'UserController@saveGender')->name('saveGender');
+
     }
 );
 
@@ -95,12 +95,17 @@ Route::middleware('auth')->group(
         Route::post('/movie/{id}/createreview', 'ReviewController@createReview')->name('createReview');
 
         //Person
-        Route::post('/person/{id}/edit/likeornot', 'PersonController@LikeOrNot')->name('likeOrNot');
+        Route::post('/person/{id}/edit/likeornot', 'PersonController@likeOrNot')->name('likeOrNot');
+
+        //User
+        Route::post('/user/{login}/edit/followornot', 'UserController@followOrNot')->name('followOrNot');
+
     }
 );
 
 Route::middleware('admin')->group(
     function () {
         Route::post('/user/{login}/edit/saveaccess', 'UserController@saveAccess')->name('saveAccess');
+        Route::post('/user/{login}/edit/deleteuser', 'UserController@deleteUser')->name('deleteUser');
     }
 );

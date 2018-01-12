@@ -106,6 +106,20 @@ class User
         $user->followers()->save($followedUser->getNeo4jUser(), ["since" => Carbon::now()->toDateString()]);
     }
 
+    public function unFollow(User $unFollowUser)
+    {
+        if ($this->following($unFollowUser)) {
+            $edge = $this->getNeo4jUser()->followers()->edge($unFollowUser->getNeo4jUser());
+            $edge->delete();
+        }
+    }
+
+    public function following(User $followingUser)
+    {
+        $user = $this->getNeo4jUser();
+        return $user->followed()->edge($followingUser->getNeo4jUser());
+    }
+
     public function getFollowers()
     {
         return $this->getNeo4jUser()->followers;
@@ -155,9 +169,8 @@ class User
     public function liked(Movie $movie)
     {
         $user = $this->getNeo4jUser();
-        $edge = $user->like()->edge($movie->getNeo4jMovie());
 
-        return $edge != null;
+        return $user->like()->edge($movie->getNeo4jMovie()) != null;
     }
 
     public function revived(Movie $movie)
@@ -176,13 +189,6 @@ class User
     public function getLikedMovies()
     {
         return $this->getNeo4jUser()->like;
-    }
-
-    public function doesNotLike(Movie $movie)
-    {
-        $user = $this->getNeo4jUser()->first();
-
-        $user->doesNotLike()->save($movie->getNeo4jMovie());
     }
 
     public function getUnlikedMovies()

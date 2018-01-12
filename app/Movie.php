@@ -58,6 +58,14 @@ class Movie
             return false;
         }
 
+        $reviews = $this->getReviews();
+
+        foreach ($reviews as $review)
+        {
+            $item = new Review($review->id);
+            $item->delete();
+        }
+
         return $this->getSqlMovie()->delete() && $this->getNeo4jMovie()->delete();
     }
 

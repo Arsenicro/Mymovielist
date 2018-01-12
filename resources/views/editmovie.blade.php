@@ -8,7 +8,7 @@
                     <img src="{{ $info->photo }}" width="200px" height="300px"><br>
                     <form action="{{ action('MovieController@saveImage',[$info->id]) }}" id="photoSubmit" method="post" style="margin-top: 10px">
                         {{ csrf_field() }}
-                        <textarea class="text-center" rows="5" name="img">{{ $info->photo }}</textarea><a
+                        <textarea class="text-center form-control" rows="5" name="img">{{ $info->photo }}</textarea><a
                                 href="#" onclick="document.getElementById('photoSubmit').submit()"><span
                                     class="glyphicon glyphicon-floppy-disk" style="margin-left: 10px"></span></a>
                     </form>
@@ -16,7 +16,7 @@
                         Production date:<br>
                         <form action="{{ action('MovieController@saveDate',[$info->id]) }}" id="dateSubmit" method="post">
                             {{ csrf_field() }}
-                            <textarea class="text-center" rows="1" name="date">{{ $info->prod_date }}</textarea><a
+                            <textarea class="text-center form-control" rows="1" name="date">{{ $info->prod_date }}</textarea><a
                                     href="#" onclick="document.getElementById('dateSubmit').submit()"><span
                                         class="glyphicon glyphicon-floppy-disk" style="margin-left: 10px"></span></a>
                         </form>
@@ -61,7 +61,7 @@
                                                                          style="margin-left: 10px"></span></a><br>
                         <form action="{{ action('MovieController@saveTitle',[$info->id]) }}" id="titleSubmit" method="post">
                             {{ csrf_field() }}
-                            <textarea class="text-center" rows="1" name="title">{{ $info->title }}</textarea><a
+                            <textarea class="text-center form-control" rows="1" name="title">{{ $info->title }}</textarea><a
                                     href="#" onclick="document.getElementById('titleSubmit').submit()"><span
                                         class="glyphicon glyphicon-floppy-disk" style="margin-left: 10px"></span></a>
                         </form>
