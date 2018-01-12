@@ -58,6 +58,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'mod' => \Mymovielist\Http\Middleware\Moderator::class,
         'auth' => \Mymovielist\Http\Middleware\AuthUser::class,
+        'admin' => \Mymovielist\Http\Middleware\AuthAdmin::class,
+        'authModOrMe' => \Mymovielist\Http\Middleware\AuthModOrMe::class,
 
     ];
 }

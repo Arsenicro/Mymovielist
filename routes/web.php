@@ -53,6 +53,15 @@ Route::middleware('mod')->group(
         Route::post('/movie/{id}/edit/deletewriter', 'MovieController@deleteWriter')->name('deleteWriter');
         Route::get('/movie/{id}/edit/deletemovie', 'MovieController@deleteMovie')->name('deleteMovie');
 
+        //Edit person
+        Route::get('/person/{id}/edit', 'PersonController@edit')->name('editPerson');
+        Route::post('/person/{id}/edit/savetitle', 'PersonController@saveName')->name('saveName');
+        Route::post('/person/{id}/edit/savesurname', 'PersonController@saveSurname')->name('saveSurname');
+        Route::post('/person/{id}/edit/savebiography', 'PersonController@saveBiography')->name('saveBiography');
+        Route::post('/person/{id}/edit/savebirthday', 'PersonController@saveBirthday')->name('saveBirthday');
+        Route::post('/person/{id}/edit/saveimage', 'PersonController@saveImage')->name('saveImage');
+        Route::post('/person/{id}/edit/deleteperson', 'PersonController@deletePerson')->name('deletePerson');
+
         //Adding
         Route::get('/adding', 'AddingController@index')->name('adding');
         Route::post('/adding/addperson', 'AddingController@addPerson')->name('addingPerson');
@@ -62,12 +71,36 @@ Route::middleware('mod')->group(
     }
 );
 
+Route::middleware('authModOrMe')->group(
+    function () {
+        //Edit user
+        Route::get('/user/{login}/edit', 'UserController@edit')->name('editUser');
+        Route::post('/user/{login}/edit/savename', 'UserController@saveName')->name('saveName');
+        Route::post('/user/{login}/edit/savesurname', 'UserController@saveSurname')->name('saveSurname');
+        Route::post('/user/{login}/edit/saveemail', 'UserController@saveEmail')->name('saveEmail');
+        Route::post('/user/{login}/edit/saveavatar', 'UserController@saveAvatar')->name('saveAvatar');
+        Route::post('/user/{login}/edit/savebirthday', 'UserController@saveBirthday')->name('saveBirthday');
+        Route::post('/user/{login}/edit/saveabout', 'UserController@saveAbout')->name('saveAbout');
+        Route::post('/user/{login}/edit/savelocation', 'UserController@saveLocation')->name('saveLocation');
+        Route::post('/user/{login}/edit/savegender', 'UserController@saveGender')->name('saveGender');
+    }
+);
+
 Route::middleware('auth')->group(
     function () {
+        //Movie
         Route::post('/movie/{id}/edit/savescore', 'MovieController@saveScore')->name('saveScore');
         Route::post('/movie/{id}/edit/likeornot', 'MovieController@likeOrNot')->name('likeOrNot');
         Route::get('/movie/{id}/newreview', 'ReviewController@newReview')->name('newReview');
         Route::post('/movie/{id}/createreview', 'ReviewController@createReview')->name('createReview');
 
+        //Person
+        Route::post('/person/{id}/edit/likeornot', 'PersonController@LikeOrNot')->name('likeOrNot');
+    }
+);
+
+Route::middleware('admin')->group(
+    function () {
+        Route::post('/user/{login}/edit/saveaccess', 'UserController@saveAccess')->name('saveAccess');
     }
 );
