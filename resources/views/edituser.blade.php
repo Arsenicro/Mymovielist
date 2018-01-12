@@ -39,12 +39,23 @@
                                         class="glyphicon glyphicon-floppy-disk" style="margin-left: 10px"></span></a>
                         </form>
                     </div>
+                    <div style="text-align: center">
+                        <form action="{{ action('UserController@saveBirthday',[$info->login]) }}" id="saveBirthday" method="post">
+                            {{ csrf_field() }}
+                            <label for="surname">Birthday (YYYY-MM-DD):</label>
+                            <textarea class="text-center form-control" rows="1" name="birthday">{{ $info->birthday }}</textarea><a
+                                    href="#" onclick="document.getElementById('saveBirthday').submit()"><span
+                                        class="glyphicon glyphicon-floppy-disk" style="margin-left: 10px"></span></a>
+                        </form>
+                    </div>
                 </div>
             </td>
             <td class="text-center" valign="top" width="90%">
                 <strong style="font-size: 30px; text-align: center;">
                     {{ $info->login }}  <a href="{{ route('user',[$info->login]) }}"><span class="glyphicon glyphicon-ok"
                                                                                          style="margin-left: 10px"></span></a>
+                    <a href="{{ route('deleteUser',[$info->login]) }}" onclick="return confirm('Are you sure?')"><span class="glyphicon glyphicon-erase" style="margin-left: 10px"></span></a>
+                    <br>
                 </strong>
                 <form action="{{ action('UserController@saveGender',[$info->login]) }}" id="saveGender" method="post">
                     {{ csrf_field() }}

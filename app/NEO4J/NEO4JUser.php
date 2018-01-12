@@ -26,7 +26,7 @@ class NEO4JUser extends NeoEloquent
 
     public function wroteReview()
     {
-        return $this->hasMany('Mymovielist\NEO4J\NEO4JReview', 'REVIEWED');
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JReview', 'WROTE');
     }
 
     public function isFan()

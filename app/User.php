@@ -57,13 +57,13 @@ class User
 
     public function delete()
     {
-        if ($this->exist()) {
+        if (!$this->exist()) {
             return false;
         }
 
         $reviews = $this->getReviews();
         foreach ($reviews as $review) {
-            $review = new Review($review->id);
+            $review = new Review($review->rid);
             $review->delete();
         }
 
@@ -135,6 +135,17 @@ class User
         $user = $this->getNeo4jUser();
 
         $user->isFan()->save($person->getNeo4jPerson());
+    }
+
+    public function unMakeFan(Person $person)
+    {
+        if($person->likedBy($this))
+        {
+            $this->getNeo4jUser()->isFan()->edge($person->getNeo4jPerson())->delete();
+            return true;
+        }
+
+        return false;
     }
 
     public function getIdols()

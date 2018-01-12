@@ -40,7 +40,7 @@ class Person
 
     public function delete()
     {
-        if ($this->exist()) {
+        if (!$this->exist()) {
             return false;
         }
 
@@ -53,6 +53,12 @@ class Person
         $neo4jPerson = NEO4JPerson::create(['pid' => $sqlPerson->id]);
 
         return new Person($sqlPerson->id, $sqlPerson, $neo4jPerson);
+    }
+
+    public function setAttribute($data)
+    {
+        $person = $this->getSqlPerson();
+        $person->update($data);
     }
 
     public function getNeo4jPerson()
@@ -101,6 +107,11 @@ class Person
     public function played()
     {
         return $this->neo4jPerson->isStar()->get();
+    }
+
+    public function likedBy(User $user)
+    {
+        return $this->getNeo4jPerson()->hasFan()->edge($user->getNeo4jUser()) != null;
     }
 
     public function getRole(Movie $movie)

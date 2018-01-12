@@ -15,7 +15,6 @@ class UserController extends Controller
 {
     public function user($login)
     {
-        dd(NEO4JMovie::dupa());
         $user = new User($login);
         $info = $user->getUserInfo();
 
@@ -25,11 +24,18 @@ class UserController extends Controller
 
         $authUser = new User(Auth::user()->login);
 
+        $me       = Auth::user()->login == $login;
+        $followed = false;
+        if (!$me) {
+            $followed = $authUser->following($user);
+        }
+
+
         return view(
             'user', [
                 'info'     => $info,
-                'me'       => Auth::user()->login == $login,
-                'followed' => $authUser->following($user)
+                'me'       => $me,
+                'followed' => $followed
             ]
         );
     }
@@ -128,11 +134,17 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'Something went wrong!');
         }
 
-        $history = new EditHistory('user');
-        $history->saveEdit($login, 'birthday', $user->getUserInfo()->birthday);
-        $user->setAttribute(['birthday' => $birthday]);
+        if (date('Y-m-d', strtotime($birthday)) == $birthday) {
 
-        return redirect()->route('editUser', [$login])->with('message', 'Saved');
+            $history = new EditHistory('user');
+            $history->saveEdit($login, 'birthday', $user->getUserInfo()->birthday);
+            $user->setAttribute(['birthday' => $birthday]);
+
+            return redirect()->route('editUser', [$login])->with('message', 'Saved');
+        }
+
+        return redirect()->back()->with('error', 'Invalid date!');
+
     }
 
     public function saveAbout($login)
@@ -195,6 +207,15 @@ class UserController extends Controller
             }
         }
 
+        return redirect()->back()->with('error', 'Something went wrong!');
+    }
+
+    public function deleteUser($login)
+    {
+        $user = new User($login);
+        if ($user->delete()) {
+            return redirect()->route('userList')->with('message', 'Deleted!');
+        }
         return redirect()->back()->with('error', 'Something went wrong!');
     }
 }

@@ -14,12 +14,24 @@
             </td>
             <td class="text-center" valign="top" width="90%">
                 <strong style="font-size: 50px; text-align: center;">
-                    {{ $info->name }} {{ $info->surname }} <span class="glyphicon glyphicon-edit" style="margin-left: 10px"></span>  <span class="glyphicon glyphicon-check" style="margin-left: 10px"></span>
+                    {{ $info->name }} {{ $info->surname }}<a href="{{ route('editPerson',[$info->id]) }}"><span class="glyphicon glyphicon-edit"
+                                                                                                                style="margin-left: 10px"></span></a>
+                    <form action="{{ route('likePersonOrNot',[$info->id]) }}" id="likeOrNot"
+                          method="post" style="display: inline-block">
+                        {{ csrf_field() }}
+                        <a href="#" onclick="document.getElementById('likeOrNot').submit()">
+                            @if($liked)
+                                <span class="glyphicon glyphicon-eye-close" style="margin-left: 10px"></span>
+                            @else
+                                <span class="glyphicon glyphicon-eye-open" style="margin-left: 10px"></span>
+                            @endif
+                        </a>
+                    </form>
                 </strong>
                 <div style="margin-top: 50px">{{ $info->biography }}</div>
                 <table class="table" style="margin-top: 50px">
                     <tr>
-                        <th class="text-center" colspan="2" >
+                        <th class="text-center" colspan="2">
                             <strong style="font-size: 30px; text-align: center;">
                                 Played
                             </strong>

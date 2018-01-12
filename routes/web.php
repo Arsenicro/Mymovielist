@@ -55,12 +55,12 @@ Route::middleware('mod')->group(
 
         //Edit person
         Route::get('/person/{id}/edit', 'PersonController@edit')->name('editPerson');
-        Route::post('/person/{id}/edit/savetitle', 'PersonController@saveName')->name('saveName');
+        Route::post('/person/{id}/edit/savename', 'PersonController@saveName')->name('saveName');
         Route::post('/person/{id}/edit/savesurname', 'PersonController@saveSurname')->name('saveSurname');
         Route::post('/person/{id}/edit/savebiography', 'PersonController@saveBiography')->name('saveBiography');
         Route::post('/person/{id}/edit/savebirthday', 'PersonController@saveBirthday')->name('saveBirthday');
         Route::post('/person/{id}/edit/saveimage', 'PersonController@saveImage')->name('saveImage');
-        Route::post('/person/{id}/edit/deleteperson', 'PersonController@deletePerson')->name('deletePerson');
+        Route::get('/person/{id}/edit/deleteperson', 'PersonController@deletePerson')->name('deletePerson');
 
         //Adding
         Route::get('/adding', 'AddingController@index')->name('adding');
@@ -95,7 +95,7 @@ Route::middleware('auth')->group(
         Route::post('/movie/{id}/createreview', 'ReviewController@createReview')->name('createReview');
 
         //Person
-        Route::post('/person/{id}/edit/likeornot', 'PersonController@likeOrNot')->name('likeOrNot');
+        Route::post('/person/{id}/edit/likeornot', 'PersonController@likeOrNot')->name('likePersonOrNot');
 
         //User
         Route::post('/user/{login}/edit/followornot', 'UserController@followOrNot')->name('followOrNot');
@@ -106,6 +106,6 @@ Route::middleware('auth')->group(
 Route::middleware('admin')->group(
     function () {
         Route::post('/user/{login}/edit/saveaccess', 'UserController@saveAccess')->name('saveAccess');
-        Route::post('/user/{login}/edit/deleteuser', 'UserController@deleteUser')->name('deleteUser');
+        Route::get('/user/{login}/edit/deleteuser', 'UserController@deleteUser')->name('deleteUser');
     }
 );
