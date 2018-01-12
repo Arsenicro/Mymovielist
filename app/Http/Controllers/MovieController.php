@@ -5,6 +5,7 @@ namespace Mymovielist\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Mymovielist\EditHistory;
 use Mymovielist\Genre;
 use Mymovielist\Movie;
 use Mymovielist\Person;
@@ -155,6 +156,10 @@ class MovieController extends Controller
         if ($title == '') {
             return redirect()->back()->with('error', 'Not a valid title');
         }
+
+        $history = new EditHistory('movie');
+        $history->saveEdit($mid,'title',$movie->getMovieInfo()->title);
+
         $movie->save(['title' => $title]);
         return redirect()->back()->with('message', 'Saved');
     }
@@ -166,6 +171,10 @@ class MovieController extends Controller
         if ($desc == '') {
             return redirect()->back()->with('error', 'Not a valid description');
         }
+
+        $history = new EditHistory('movie');
+        $history->saveEdit($mid,'description',$movie->getMovieInfo()->description);
+
         $movie->save(['description' => $desc]);
         return redirect()->back()->with('message', 'Saved');
     }
@@ -177,6 +186,10 @@ class MovieController extends Controller
         if ($img == '') {
             return redirect()->back()->with('error', 'Not a valid image link');
         }
+
+        $history = new EditHistory('movie');
+        $history->saveEdit($mid,'photo',$movie->getMovieInfo()->photo);
+
         $movie->save(['photo' => $img]);
         return redirect()->back()->with('message', 'Saved');
     }
@@ -186,6 +199,10 @@ class MovieController extends Controller
         $movie = new Movie($mid);
         $date  = Input::get('date');
         if (date('Y-m-d', strtotime($date)) == $date) {
+
+            $history = new EditHistory('movie');
+            $history->saveEdit($mid,'date',$movie->getMovieInfo()->prod_date);
+
             $movie->save(['prod_date' => Carbon::createFromFormat('Y-m-d', $date)]);
             return redirect()->back()->with('message', 'Saved');
         }

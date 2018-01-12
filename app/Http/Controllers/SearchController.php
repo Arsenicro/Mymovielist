@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Input;
 use Mymovielist\Genre;
 use Mymovielist\Movie;
 use Mymovielist\Person;
+use Mymovielist\SearchStats;
 use Mymovielist\User;
 
 class SearchController extends Controller
@@ -49,14 +50,20 @@ class SearchController extends Controller
 
         }
 
-        if($searchMovie)
+        $searchStats = new SearchStats();
+
+        if ($searchMovie) {
+            $searchStats->saveSearch($text,'movie',$watched,$genres);
             $result = $this->searchMovie($text, $genres, $watched);
-        elseif ($searchUser)
+        } elseif ($searchUser) {
+            $searchStats->saveSearch($text,'user');
             $result = $this->searchUser($text);
-        elseif ($searchPeople)
+        } elseif ($searchPeople) {
+            $searchStats->saveSearch($text,'person');
             $result = $this->searchPerson($text);
-        else
-            return redirect('/search')->with('error','Something went wrong');
+        } else {
+            return redirect('/search')->with('error', 'Something went wrong');
+        }
 
         $result = ListController::sort(Input::get('order'), Input::get('sortby'), $result);
 
