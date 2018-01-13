@@ -334,9 +334,24 @@ class User
         );
     }
 
+    public function recommendByLikedPerson()
+    {
+        return $this->getIdols()->map(
+            function ($item) {
+                return $item->isStar->merge($item->isDirector)->merge($item->isWriter);
+            }
+        )->collapse()->unique()->filter(
+            function ($item) {
+                $movie = new Movie($item->mid);
+                return $this->canRecommend($movie);
+            }
+        );
+    }
+
+
     public function recommend()
     {
-        return $this->recommendByFollowed()->merge($this->recommendByLikedAndGenres())->unique()->values();
+        return $this->recommendByFollowed()->merge($this->recommendByLikedAndGenres())->merge($this->recommendByLikedPerson())->unique()->values();
     }
 
 
