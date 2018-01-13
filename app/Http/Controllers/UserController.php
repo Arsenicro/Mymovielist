@@ -15,19 +15,21 @@ class UserController extends Controller
 {
     public function user($login)
     {
-        $user = new User($login);
-        $info = $user->getUserInfo();
+        $user     = new User($login);
+        $info     = $user->getUserInfo();
+        $followed = false;
+        $me       = false;
 
         if (!$user->exist()) {
             return abort(404);
         }
+        if (Auth::user() != null) {
+            $authUser = new User(Auth::user()->login);
 
-        $authUser = new User(Auth::user()->login);
-
-        $me       = Auth::user()->login == $login;
-        $followed = false;
-        if (!$me) {
-            $followed = $authUser->following($user);
+            $me = Auth::user()->login == $login;
+            if (!$me) {
+                $followed = $authUser->following($user);
+            }
         }
 
 

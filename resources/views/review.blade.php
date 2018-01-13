@@ -28,7 +28,13 @@
                             {{ $reviewinfo->created_at }}
                         </td>
                         <td  class="text-right" style="vertical-align: middle" width="10%">
-                            <span class="glyphicon glyphicon-edit"></span> <span class="glyphicon glyphicon-trash"></span>
+                            <form action="{{ route('deleteReview',[$movieinfo->id,$reviewinfo->id]) }}" id="deleteReview"
+                                  method="post" style="display: inline-block">
+                                {{ csrf_field() }}
+                                <a href="#" onclick="document.getElementById('deleteReview').submit()">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </a>
+                            </form>
                         </td>
                     </tr>
                     <tr>

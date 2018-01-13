@@ -60,8 +60,7 @@ class Movie
 
         $reviews = $this->getReviews();
 
-        foreach ($reviews as $review)
-        {
+        foreach ($reviews as $review) {
             $item = new Review($review->id);
             $item->delete();
         }
@@ -165,7 +164,11 @@ class Movie
         $oldScore       = $movie->score * $numberOfScores;
 
         $numberOfScores -= 1;
-        $newScore       = ($oldScore - $score) / $numberOfScores;
+        if ($numberOfScores == 0) {
+            $newScore = 0;
+        } else {
+            $newScore = ($oldScore - $score) / $numberOfScores;
+        }
 
         $movie->number_of_scores = $numberOfScores;
         $movie->score            = $newScore;

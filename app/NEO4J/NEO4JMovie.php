@@ -36,7 +36,7 @@ class NEO4JMovie extends NeoEloquent
 
     public function scores()
     {
-        return $this->hasMany('Mymovielist\NEO4J\NEO4JUser', 'SCORED');
+        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JUser', 'SCORED');
     }
 
     public function hasDirectors()

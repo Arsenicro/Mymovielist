@@ -2,6 +2,9 @@
 
 namespace Mymovielist\NEO4J;
 
+use Everyman\Neo4j\Cypher\Query;
+use Illuminate\Support\Facades\DB;
+use Mymovielist\Movie;
 use NeoEloquent;
 
 class NEO4JUser extends NeoEloquent
@@ -14,19 +17,19 @@ class NEO4JUser extends NeoEloquent
 
     protected $fillable = ['login'];
 
-    public function followers()
+    public function followed()
     {
         return $this->belongsToMany('Mymovielist\NEO4J\NEO4JUser', 'FOLLOWED_BY');
     }
 
-    public function followed()
+    public function followers()
     {
         return $this->hasMany('Mymovielist\NEO4J\NEO4JUser', 'FOLLOWED_BY');
     }
 
     public function wroteReview()
     {
-        return $this->hasMany('Mymovielist\NEO4J\NEO4JReview', 'WROTE');
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JReview', 'WROTE_REVIEW');
     }
 
     public function isFan()
@@ -46,6 +49,27 @@ class NEO4JUser extends NeoEloquent
 
     public function score()
     {
-        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JMovie', 'SCORED');
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JMovie', 'SCORED');
+    }
+
+    public static function myQuery($login)
+    {
+        $client      = DB::connection('neo4j')->getClient();
+        $queryString = "MATCH (u1)<-[:FOLLOWS]-(u2)-[:IS_FAN]->(p)-[:STAR]->(m) WHERE u1.login=\"{$login}\" RETURN (m)";
+        $query       = new Query($client, $queryString, array('userId' => $login));
+        $result      = $query->getResultSet();
+        $midArray    = [];
+        foreach ($result as $row) {
+            array_push($midArray, $row['m']->getProperties()['mid']);
+        }
+
+        $collection = collect($midArray)->map(
+            function ($key) {
+                $movie = new Movie($key);
+                return $movie;
+            }
+        );
+
+        return $collection;
     }
 }

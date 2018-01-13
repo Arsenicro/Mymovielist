@@ -37,7 +37,7 @@ class EditHistory
         } else {
             $history = MongoEditHistory::where('name', '=', $this->name)->where('id', '=', $id)->get();
         }
-        $history->sortByDesc('created_at');
+        $history->sortBy('created_at');
 
         return $history;
     }

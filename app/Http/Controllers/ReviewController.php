@@ -74,4 +74,16 @@ class ReviewController extends Controller
         return redirect(route('movie', [$mid]))->with('message', 'Something went wrong');
 
     }
+
+    public function deleteReview($mid, $rid)
+    {
+        $review = new Review($rid);
+        if ($review->exist()) {
+            $review->delete();
+            return redirect()->route('movie',[$mid])->with('message', 'Deleted!');
+        }
+
+        return redirect()->back()->with('error', 'Something went wrong!');
+
+    }
 }

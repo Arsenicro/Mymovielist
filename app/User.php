@@ -139,8 +139,7 @@ class User
 
     public function unMakeFan(Person $person)
     {
-        if($person->likedBy($this))
-        {
+        if ($person->likedBy($this)) {
             $this->getNeo4jUser()->isFan()->edge($person->getNeo4jPerson())->delete();
             return true;
         }
@@ -276,6 +275,20 @@ class User
 
     public function dislikeMovie(Movie $movie)
     {
+        $this->getNeo4jUser()->doesNotLike()->save($movie->getNeo4jMovie());
+    }
+
+    public function resetDisliked()
+    {
+        $user     = $this->getNeo4jUser();
+        $notLiked = $user->doesNotLike;
+        foreach ($notLiked as $movie) {
+            $user->doesNotLike()->edge($movie)->delete();
+        }
+    }
+
+    public function isMovieDisliked(Movie $movie)
+    {
         $user = $this->getNeo4jUser();
 
         return $user->doesNotLike()->edge($movie->getNeo4jMovie()) != null ? true : false;
@@ -285,7 +298,7 @@ class User
 
     public function canRecommend(Movie $movie)
     {
-        return !$this->watchedMovie($movie) && !$this->dislikeMovie($movie);
+        return !$this->watchedMovie($movie) && !$this->isMovieDisliked($movie);
     }
 
     public function recommendByLikedAndGenres()

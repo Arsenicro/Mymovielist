@@ -18,7 +18,7 @@ DB::listen(function($query){
 
 Route::get(
     '/', function () {
-    return view('welcome');
+    return redirect(route('home'));
 }
 );
 
@@ -68,6 +68,9 @@ Route::middleware('mod')->group(
         Route::post('/adding/addmovie', 'AddingController@addMovie')->name('addingMovie');
         Route::post('/adding/addgenre', 'AddingController@addGenre')->name('addingGenre');
         Route::post('/adding/deletegenre', 'AddingController@deleteGenre')->name('deleteGenre');
+
+        //DeleteReview
+        Route::post('/movie/{mid}/review/{rid}', 'ReviewController@deleteReview')->name('deleteReview');
     }
 );
 
@@ -82,7 +85,6 @@ Route::middleware('authModOrMe')->group(
         Route::post('/user/{login}/edit/saveabout', 'UserController@saveAbout')->name('saveAbout');
         Route::post('/user/{login}/edit/savelocation', 'UserController@saveLocation')->name('saveLocation');
         Route::post('/user/{login}/edit/savegender', 'UserController@saveGender')->name('saveGender');
-
     }
 );
 
@@ -100,12 +102,25 @@ Route::middleware('auth')->group(
         //User
         Route::post('/user/{login}/edit/followornot', 'UserController@followOrNot')->name('followOrNot');
 
+        //Recommendation
+        Route::get('/deleterecommend/{id}', 'HomeController@deleteRecommend')->name('deleteRecommendation');
+        Route::get('/resetrecommend', 'HomeController@resetRecommend')->name('resetRecommend');
+
+        //Query
+        Route::get('/listofspecialmovies', 'HomeController@query')->name('query');
+
     }
 );
 
 Route::middleware('admin')->group(
     function () {
         Route::post('/user/{login}/edit/saveaccess', 'UserController@saveAccess')->name('saveAccess');
+        Route::get('/logs', 'LogController@log')->name('logs');
+        Route::get('/logs/movie', 'LogController@viewMoviesEditHistory')->name('moviesEdits');
+        Route::get('/logs/user', 'LogController@viewUsersEditHistory')->name('usersEdits');
+        Route::get('/logs/person', 'LogController@viewPersonsEditHistory')->name('personsEdits');
+        Route::get('/logs/search', 'LogController@viewSearch')->name('searchStats');
+        Route::post('/logs/clear', 'LogController@clear')->name('clearLogs');
         Route::get('/user/{login}/edit/deleteuser', 'UserController@deleteUser')->name('deleteUser');
     }
 );

@@ -2,6 +2,7 @@
 
 namespace Mymovielist;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Mymovielist\Mongo\MongoSearchStats;
 
@@ -34,7 +35,7 @@ class SearchStats
             $search = MongoSearchStats::where('name', '=', $name)->get();
         }
 
-        $search->sortByDesc('created_at');
+        $search->sortBy('created_at');
 
         return $search;
     }

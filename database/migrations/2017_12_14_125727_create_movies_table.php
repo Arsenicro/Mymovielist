@@ -18,7 +18,7 @@ class CreateMoviesTable extends Migration
             $table->text('title');
             $table->date('prod_date')->nullable();
             $table->text('description')->nullable();
-            $table->text('photo')->default('https://websoul.pl/blog/wp-content/uploads/2013/06/question-mark1.jpg');
+            $table->string('photo')->default('https://websoul.pl/blog/wp-content/uploads/2013/06/question-mark1.jpg');
             $table->decimal('score')->default(0);
             $table->integer('number_of_scores')->default(0);
             $table->timestamps();

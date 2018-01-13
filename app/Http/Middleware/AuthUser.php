@@ -16,10 +16,10 @@ class AuthUser
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::user() != null || Auth::user()->login == $request->route('login')) {
+        if (Auth::user() != null) {
             return $next($request);
         }
 
-        return \redirect()->back()->with('error', "You are not logged in!");
+        return \redirect()->route('login')->with('error', "You are not logged in!");
     }
 }
