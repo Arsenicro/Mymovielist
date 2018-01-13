@@ -158,7 +158,7 @@ class MovieController extends Controller
         }
 
         $history = new EditHistory('movie');
-        $history->saveEdit($mid,'title',$movie->getMovieInfo()->title);
+        $history->saveEdit($mid, 'title', $movie->getMovieInfo()->title);
 
         $movie->save(['title' => $title]);
         return redirect()->back()->with('message', 'Saved');
@@ -173,7 +173,7 @@ class MovieController extends Controller
         }
 
         $history = new EditHistory('movie');
-        $history->saveEdit($mid,'description',$movie->getMovieInfo()->description);
+        $history->saveEdit($mid, 'description', $movie->getMovieInfo()->description);
 
         $movie->save(['description' => $desc]);
         return redirect()->back()->with('message', 'Saved');
@@ -188,7 +188,7 @@ class MovieController extends Controller
         }
 
         $history = new EditHistory('movie');
-        $history->saveEdit($mid,'photo',$movie->getMovieInfo()->photo);
+        $history->saveEdit($mid, 'photo', $movie->getMovieInfo()->photo);
 
         $movie->save(['photo' => $img]);
         return redirect()->back()->with('message', 'Saved');
@@ -201,7 +201,7 @@ class MovieController extends Controller
         if (date('Y-m-d', strtotime($date)) == $date) {
 
             $history = new EditHistory('movie');
-            $history->saveEdit($mid,'date',$movie->getMovieInfo()->prod_date);
+            $history->saveEdit($mid, 'date', $movie->getMovieInfo()->prod_date);
 
             $movie->save(['prod_date' => Carbon::createFromFormat('Y-m-d', $date)]);
             return redirect()->back()->with('message', 'Saved');
@@ -380,7 +380,13 @@ class MovieController extends Controller
     public function deleteMovie($mid)
     {
         $movie = new Movie($mid);
-        if ($movie->exist() && $movie->delete()) {
+        if ($movie->exist()) {
+            $reviews = $movie->getReviews();
+            foreach ($reviews as $review) {
+                $rev = new Review($review->rid);
+                $rev->delete();
+            }
+            $movie->delete();
             return redirect()->route('movieList')->with('message', 'Deleted!');
         }
 

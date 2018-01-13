@@ -17,12 +17,12 @@ class NEO4JUser extends NeoEloquent
 
     protected $fillable = ['login'];
 
-    public function followed()
+    public function followers()
     {
         return $this->belongsToMany('Mymovielist\NEO4J\NEO4JUser', 'FOLLOWED_BY');
     }
 
-    public function followers()
+    public function followed()
     {
         return $this->hasMany('Mymovielist\NEO4J\NEO4JUser', 'FOLLOWED_BY');
     }
