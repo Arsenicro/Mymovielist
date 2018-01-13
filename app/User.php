@@ -263,7 +263,7 @@ class User
     {
         $user = $this->getNeo4jUser();
 
-        return $user->score()->edge($movie->getNeo4jMovie()) != null ? true : false;
+        return $user->score()->edge($movie->getNeo4jMovie()) != null;
     }
 
     //Movie is watched iff is scored

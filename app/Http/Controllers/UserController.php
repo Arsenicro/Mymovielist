@@ -211,9 +211,8 @@ class UserController extends Controller
         $authUser   = new User(Auth::user()->login);
         if ($authUser->getUserInfo()->login != $followUser->getUserInfo()->login) {
             if ($authUser->following($followUser)) {
-                if ($authUser->unFollow($followUser)) {
-                    return redirect()->back()->with('message', 'Unfollowed!');
-                }
+                $authUser->unFollow($followUser);
+                return redirect()->back()->with('message', 'Unfollowed!');
             } else {
                 $authUser->follow($followUser);
                 return redirect()->back()->with('message', 'Followed!');
@@ -223,8 +222,10 @@ class UserController extends Controller
         return redirect()->back()->with('error', 'Something went wrong!');
     }
 
-    public function deleteUser($login)
-    {
+    public
+    function deleteUser(
+        $login
+    ) {
         $user = new User($login);
         if ($user->delete()) {
             return redirect()->route('userList')->with('message', 'Deleted!');

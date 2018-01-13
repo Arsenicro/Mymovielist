@@ -20,6 +20,6 @@
         @endforeach
     </ul>
     <a href="{{ route('resetRecommend') }}"><button class="btn btn-danger">Reset recommendations</button></a>
-    <a href="{{ route('query') }}"><button class="btn btn-danger">Movies with actor that is idol for some of my followers</button></a>
+    <a href="{{ route('query') }}"><button class="btn btn-danger">Movies with idol of my followers in cast</button></a>
 </div>
 @endsection

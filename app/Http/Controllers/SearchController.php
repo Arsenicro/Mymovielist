@@ -103,7 +103,6 @@ class SearchController extends Controller
                 }
             );
         }
-
         if (Auth::user() != null && !$watched) {
             $movies = $movies->filter(
                 function ($key) {
