@@ -53,6 +53,28 @@
                     </form>
                 </strong>
                 <div style="margin-top: 50px">{{ $info->about }}</div>
+                <table class="table" style="margin-top: 50px">
+                    <tr>
+                        <th class="text-center" colspan="2" >
+                            <strong style="font-size: 30px; text-align: center;">
+                                Reviews
+                            </strong>
+                        </th>
+                    </tr>
+                    @foreach($reviews as $review)
+                        <tr>
+                            <th class="text-left" style="vertical-align: middle;" width="80%">
+                                <img src="{{ $review['movie']->photo }}" width="50px" height="50px"> <a href="{{ route('movie',[$review['movie']->id]) }}">{{ $review['movie']->title }}</a>
+                            </th>
+                            <th class="text-center" style="vertical-align: middle" width="10%">
+                                {{ $review['score'] }}
+                            </th>
+                            <th class="text-center" style="vertical-align: middle">
+                                <a href="{{ route('review',[$review['movie']->id,$review['info']->id]) }}"><span class="glyphicon glyphicon-info-sign"></span></a>
+                            </th>
+                        </tr>
+                    @endforeach
+                </table>
             </td>
         </tr>
     </table>

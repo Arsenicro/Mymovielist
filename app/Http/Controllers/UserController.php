@@ -9,6 +9,7 @@ use Illuminate\Validation\Rules\In;
 use Mymovielist\EditHistory;
 use Mymovielist\Movie;
 use Mymovielist\NEO4J\NEO4JMovie;
+use Mymovielist\Review;
 use Mymovielist\User;
 
 class UserController extends Controller
@@ -32,12 +33,25 @@ class UserController extends Controller
             }
         }
 
+        $reviews = $user->getReviews();
+
+        $reviews = $reviews->map(
+            function ($key) use ($user) {
+                $review = new Review($key->rid);
+                $movie  = new Movie($review->getMovie()->mid);
+                $score = $user->scored($movie) ? $user->getUserScore($movie) : "N/A";
+
+                return ['info' => $review->getReviewInfo(), 'movie' => $movie->getMovieInfo(), 'score' => $score];
+            }
+        );
+
 
         return view(
             'user', [
                 'info'     => $info,
                 'me'       => $me,
-                'followed' => $followed
+                'followed' => $followed,
+                'reviews'  => $reviews
             ]
         );
     }
