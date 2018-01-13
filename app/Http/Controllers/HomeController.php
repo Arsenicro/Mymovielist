@@ -43,24 +43,26 @@ class HomeController extends Controller
         $movie = new Movie($mid);
         $user->dislikeMovie($movie);
 
-        return redirect()->route('home')->with('message','Removed from recommendations!');
+        return redirect()->route('home')->with('message', 'Removed from recommendations!');
     }
 
     public function resetRecommend()
     {
-        $user  = new User(Auth::user()->login);
+        $user = new User(Auth::user()->login);
         $user->resetDisliked();
 
-        return redirect()->route('home')->with('message','Restarted recommendations!');
+        return redirect()->route('home')->with('message', 'Restarted recommendations!');
     }
 
     public function query()
     {
         $results = NEO4JUser::myQuery(Auth::user()->login);
-        $results =$results->map(function ($key){
-            return $key->getMovieInfo();
-        });
+        $results = $results->map(
+            function ($key) {
+                return $key->getMovieInfo();
+            }
+        );
 
-        return view('query',['movies' => $results]);
+        return view('query', ['movies' => $results]);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Mymovielist;
 
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Mymovielist\Mongo\MongoSearchStats;
 

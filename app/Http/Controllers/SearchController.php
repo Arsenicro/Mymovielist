@@ -2,7 +2,6 @@
 
 namespace Mymovielist\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Mymovielist\Genre;
@@ -53,13 +52,13 @@ class SearchController extends Controller
         $searchStats = new SearchStats();
 
         if ($searchMovie) {
-            $searchStats->saveSearch($text,'movie',$watched,$genres);
+            $searchStats->saveSearch($text, 'movie', $watched, $genres);
             $result = $this->searchMovie($text, $genres, $watched);
         } elseif ($searchUser) {
-            $searchStats->saveSearch($text,'user');
+            $searchStats->saveSearch($text, 'user');
             $result = $this->searchUser($text);
         } elseif ($searchPeople) {
-            $searchStats->saveSearch($text,'person');
+            $searchStats->saveSearch($text, 'person');
             $result = $this->searchPerson($text);
         } else {
             return redirect('/search')->with('error', 'Something went wrong');

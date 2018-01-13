@@ -2,7 +2,6 @@
 
 namespace Mymovielist\SQL;
 
-
 use Illuminate\Database\Eloquent\Model;
 
 class SQLMovie extends Model

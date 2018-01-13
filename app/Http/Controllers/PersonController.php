@@ -2,7 +2,6 @@
 
 namespace Mymovielist\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Mymovielist\EditHistory;
@@ -111,7 +110,7 @@ class PersonController extends Controller
     public function saveImage($pid)
     {
         $person = new Person($pid);
-        $photo = Input::get('photo');
+        $photo  = Input::get('photo');
 
         if (!$person->exist()) {
             return redirect()->back()->with('error', 'Something went wrong!');
@@ -126,7 +125,7 @@ class PersonController extends Controller
 
     public function saveBirthday($pid)
     {
-        $person = new Person($pid);
+        $person   = new Person($pid);
         $birthday = Input::get('birthday');
 
         if (!$person->exist()) {
@@ -149,7 +148,7 @@ class PersonController extends Controller
     public function saveName($pid)
     {
         $person = new Person($pid);
-        $name = Input::get('name');
+        $name   = Input::get('name');
 
         if (!$person->exist()) {
             return redirect()->back()->with('error', 'Something went wrong!');
@@ -164,7 +163,7 @@ class PersonController extends Controller
 
     public function saveSurname($pid)
     {
-        $person = new Person($pid);
+        $person  = new Person($pid);
         $surname = Input::get('surname');
 
         if (!$person->exist()) {
@@ -180,7 +179,7 @@ class PersonController extends Controller
 
     public function saveBiography($pid)
     {
-        $person = new Person($pid);
+        $person    = new Person($pid);
         $biography = Input::get('biography');
 
         if (!$person->exist()) {
@@ -197,8 +196,7 @@ class PersonController extends Controller
     public function deletePerson($pid)
     {
         $person = new Person($pid);
-        if($person->delete())
-        {
+        if ($person->delete()) {
             return redirect()->route('personList')->with('message', 'Deleted!');
         }
         return redirect()->back()->with('error', 'Something went wrong!');

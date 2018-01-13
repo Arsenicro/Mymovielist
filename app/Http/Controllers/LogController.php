@@ -3,7 +3,6 @@
 namespace Mymovielist\Http\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Mymovielist\EditHistory;
 use Mymovielist\SearchStats;
 
@@ -78,6 +77,6 @@ class LogController extends Controller
         $editUser->deleteOlderThan($date);
         $searchStats->deleteOlderThan($date);
 
-        return redirect()->route('logs')->with('message','Deleted!');
+        return redirect()->route('logs')->with('message', 'Deleted!');
     }
 }

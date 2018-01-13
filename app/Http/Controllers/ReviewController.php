@@ -2,10 +2,8 @@
 
 namespace Mymovielist\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Validation\Rules\In;
 use Mymovielist\Movie;
 use Mymovielist\User;
 use Mymovielist\Review;
@@ -80,7 +78,7 @@ class ReviewController extends Controller
         $review = new Review($rid);
         if ($review->exist()) {
             $review->delete();
-            return redirect()->route('movie',[$mid])->with('message', 'Deleted!');
+            return redirect()->route('movie', [$mid])->with('message', 'Deleted!');
         }
 
         return redirect()->back()->with('error', 'Something went wrong!');

@@ -2,7 +2,6 @@
 
 namespace Mymovielist\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Mymovielist\Genre;
 use Mymovielist\Movie;
@@ -60,6 +59,6 @@ class AddingController extends Controller
 
         $person = Person::create(['name' => $personName, 'surname' => $personSurname]);
 
-        return redirect()->route('person',[$person->getPersonInfo()->id])->with('message', "Added!");
+        return redirect()->route('person', [$person->getPersonInfo()->id])->with('message', "Added!");
     }
 }

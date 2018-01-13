@@ -2,13 +2,10 @@
 
 namespace Mymovielist\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Validation\Rules\In;
 use Mymovielist\EditHistory;
 use Mymovielist\Movie;
-use Mymovielist\NEO4J\NEO4JMovie;
 use Mymovielist\Review;
 use Mymovielist\User;
 
@@ -39,7 +36,7 @@ class UserController extends Controller
             function ($key) use ($user) {
                 $review = new Review($key->rid);
                 $movie  = new Movie($review->getMovie()->mid);
-                $score = $user->scored($movie) ? $user->getUserScore($movie) : "N/A";
+                $score  = $user->scored($movie) ? $user->getUserScore($movie) : "N/A";
 
                 return ['info' => $review->getReviewInfo(), 'movie' => $movie->getMovieInfo(), 'score' => $score];
             }
