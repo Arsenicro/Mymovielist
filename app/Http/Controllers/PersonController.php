@@ -61,6 +61,20 @@ class PersonController extends Controller
 
     }
 
+    public function add()
+    {
+        $personName    = Input::get('personName');
+        $personSurname = Input::get('personSurname');
+
+        if (Person::nameAndSurnameExist($personName, $personSurname)) {
+            return redirect()->back()->with('error', "Something went wrong!");
+        }
+
+        $person = Person::create(['name' => $personName, 'surname' => $personSurname]);
+
+        return redirect()->route('person', [$person->getPersonInfo()->id])->with('message', "Added!");
+    }
+
     public function edit($pid)
     {
         $person = new Person($pid);
@@ -70,47 +84,48 @@ class PersonController extends Controller
         }
 
         $personInfo = $person->getPersonInfo();
-        $played     = $person->played();
-        $directed   = $person->directed();
-        $wrote      = $person->wrote();
-
-        $played = $played->map(
-            function ($key) use ($person) {
-                $movie = new Movie($key->mid);
-                $role  = $person->getRole($movie);
-                return ['info' => $movie->getMovieInfo(), 'role' => $role];
-            }
-        );
-
-        $directed = $directed->map(
-            function ($key) use ($person) {
-                $movie = new Movie($key->mid);
-                return ['info' => $movie->getMovieInfo()];
-            }
-        );
-
-        $wrote = $wrote->map(
-            function ($key) use ($person) {
-                $movie = new Movie($key->mid);
-                return ['info' => $movie->getMovieInfo()];
-            }
-        );
 
         return view(
             'editperson', [
-                'info'     => $personInfo,
-                'played'   => $played,
-                'directed' => $directed,
-                'wrote'    => $wrote
+                'info' => $personInfo
             ]
         );
 
     }
 
-    public function saveImage($pid)
+    public function save($pid)
+    {
+        $name      = true;
+        $surname   = true;
+        $birthday  = true;
+        $biography = true;
+        $image     = true;
+
+        if (Input::get('name') !== Input::get('oldname')) {
+            $name = $name && $this->saveName($pid, Input::get('name'));
+        }
+        if (Input::get('surname') !== Input::get('oldsurname')) {
+            $surname = $surname && $this->saveSurname($pid, Input::get('surname'));
+        }
+        if (Input::get('birthday') !== Input::get('oldbirthday')) {
+            $birthday = $birthday && $this->saveBirthday($pid, Input::get('birthday'));
+        }
+        if (Input::get('biography') !== Input::get('oldbiography')) {
+            $biography = $biography && $this->saveBiography($pid, Input::get('biography'));
+        }
+        if (Input::get('image') !== Input::get('oldimage')) {
+            $image = $image && $this->saveImage($pid, Input::get('image'));
+        }
+        if ($name && $surname && $birthday && $biography && $image) {
+            return redirect()->back()->with('message', 'Saved');
+        } else {
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+    }
+
+    public function saveImage($pid, $photo)
     {
         $person = new Person($pid);
-        $photo  = Input::get('photo');
 
         if (!$person->exist()) {
             return redirect()->back()->with('error', 'Something went wrong!');
@@ -123,10 +138,9 @@ class PersonController extends Controller
         return redirect()->route('editPerson', [$pid])->with('message', 'Saved');
     }
 
-    public function saveBirthday($pid)
+    public function saveBirthday($pid, $birthday)
     {
-        $person   = new Person($pid);
-        $birthday = Input::get('birthday');
+        $person = new Person($pid);
 
         if (!$person->exist()) {
             return redirect()->back()->with('error', 'Something went wrong!');
@@ -145,11 +159,9 @@ class PersonController extends Controller
 
     }
 
-    public function saveName($pid)
+    public function saveName($pid, $name)
     {
         $person = new Person($pid);
-        $name   = Input::get('name');
-
         if (!$person->exist()) {
             return redirect()->back()->with('error', 'Something went wrong!');
         }
@@ -161,10 +173,9 @@ class PersonController extends Controller
         return redirect()->route('editPerson', [$pid])->with('message', 'Saved');
     }
 
-    public function saveSurname($pid)
+    public function saveSurname($pid, $surname)
     {
-        $person  = new Person($pid);
-        $surname = Input::get('surname');
+        $person = new Person($pid);
 
         if (!$person->exist()) {
             return redirect()->back()->with('error', 'Something went wrong!');
@@ -177,10 +188,9 @@ class PersonController extends Controller
         return redirect()->route('editPerson', [$pid])->with('message', 'Saved');
     }
 
-    public function saveBiography($pid)
+    public function saveBiography($pid, $biography)
     {
-        $person    = new Person($pid);
-        $biography = Input::get('biography');
+        $person = new Person($pid);
 
         if (!$person->exist()) {
             return redirect()->back()->with('error', 'Something went wrong!');

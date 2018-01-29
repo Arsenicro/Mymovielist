@@ -83,6 +83,17 @@ class MovieController extends Controller
         );
     }
 
+    public function add()
+    {
+        $title = Input::get('movieTitle');
+        if ($title == "" || Movie::titleExists($title)) {
+            return redirect()->back()->with('error', "Something went wrong!");
+        }
+
+        $movie = Movie::create(['title' => $title], []);
+        return redirect()->route('movie', [$movie->getMovieInfo()->id])->with('message', 'Created!');
+    }
+
     public function edit($id)
     {
         $movie = new Movie($id);
@@ -149,65 +160,87 @@ class MovieController extends Controller
         );
     }
 
-    public function saveTitle($mid)
+    public function save($mid)
     {
-        $title = Input::get('title');
+        $title = true;
+        $date  = true;
+        $desc  = true;
+        $image = true;
+
+        if (Input::get('title') !== Input::get('oldtitle')) {
+            $title = $title && $this->saveTitle($mid, Input::get('title'));
+        }
+        if (Input::get('prod_date') !== Input::get('oldprod_date')) {
+            $date = $date && $this->saveDate($mid, Input::get('prod_date'));
+        }
+        if (Input::get('description') !== Input::get('olddescription')) {
+            $desc = $desc && $this->saveDesc($mid, Input::get('description'));
+        }
+        if (Input::get('image') !== Input::get('oldimage')) {
+            $image = $image && $this->saveImage($mid, Input::get('image'));
+        }
+        if ($title && $date && $desc && $image) {
+            return redirect()->back()->with('message', 'Saved');
+        } else {
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+    }
+
+    public function saveTitle($mid, $title)
+    {
         $movie = new Movie($mid);
         if ($title == '') {
-            return redirect()->back()->with('error', 'Not a valid title');
+            return false;
         }
 
         $history = new EditHistory('movie');
         $history->saveEdit($mid, 'title', $movie->getMovieInfo()->title);
 
         $movie->save(['title' => $title]);
-        return redirect()->back()->with('message', 'Saved');
+        return true;
     }
 
-    public function saveDesc($mid)
+    public function saveDesc($mid, $desc)
     {
-        $desc  = Input::get('desc');
         $movie = new Movie($mid);
         if ($desc == '') {
-            return redirect()->back()->with('error', 'Not a valid description');
+            return false;
         }
 
         $history = new EditHistory('movie');
         $history->saveEdit($mid, 'description', $movie->getMovieInfo()->description);
 
         $movie->save(['description' => $desc]);
-        return redirect()->back()->with('message', 'Saved');
+        return true;
     }
 
-    public function saveImage($mid)
+    public function saveImage($mid, $img)
     {
-        $img   = Input::get('img');
         $movie = new Movie($mid);
         if ($img == '') {
-            return redirect()->back()->with('error', 'Not a valid image link');
+            return false;
         }
 
         $history = new EditHistory('movie');
         $history->saveEdit($mid, 'photo', $movie->getMovieInfo()->photo);
 
         $movie->save(['photo' => $img]);
-        return redirect()->back()->with('message', 'Saved');
+        return true;
     }
 
-    public function saveDate($mid)
+    public function saveDate($mid, $date)
     {
         $movie = new Movie($mid);
-        $date  = Input::get('date');
         if (date('Y-m-d', strtotime($date)) == $date) {
 
             $history = new EditHistory('movie');
             $history->saveEdit($mid, 'date', $movie->getMovieInfo()->prod_date);
 
             $movie->save(['prod_date' => Carbon::createFromFormat('Y-m-d', $date)]);
-            return redirect()->back()->with('message', 'Saved');
+            return true;
         }
 
-        return redirect()->back()->with('error', 'Not a valid date');
+        return false;
     }
 
     public function editRole($mid)

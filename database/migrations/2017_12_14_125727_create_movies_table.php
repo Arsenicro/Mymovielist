@@ -17,7 +17,7 @@ class CreateMoviesTable extends Migration
             $table->increments('id');
             $table->text('title');
             $table->date('prod_date')->nullable();
-            $table->text('description')->nullable();
+            $table->text('description')->default('No description');
             $table->string('photo')->default('/uploads/question-mark1.jpg');
             $table->decimal('score')->default(0);
             $table->integer('number_of_scores')->default(0);

@@ -4,6 +4,7 @@ namespace Mymovielist\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Validation\Rules\In;
 use Mymovielist\EditHistory;
 use Mymovielist\Movie;
 use Mymovielist\Review;
@@ -71,10 +72,49 @@ class UserController extends Controller
         );
     }
 
-    public function saveAccess($login)
+    public function save($login)
     {
-        $user   = new User($login);
-        $access = Input::get('access');
+        $name     = true;
+        $surname  = true;
+        $birthday = true;
+        $about    = true;
+        $avatar   = true;
+        $access   = true;
+        $gender   = true;
+
+        $user = new User(Auth::user()->login);
+
+        if (Input::get('name') !== Input::get('oldname')) {
+            $name = $name && $this->saveName($login, Input::get('name'));
+        }
+        if (Input::get('surname') !== Input::get('oldsurname')) {
+            $surname = $surname && $this->saveSurname($login, Input::get('surname'));
+        }
+        if (Input::get('birthday') !== Input::get('oldbirthday')) {
+            $birthday = $birthday && $this->saveBirthday($login, Input::get('birthday'));
+        }
+        if (Input::get('about') !== Input::get('oldabout')) {
+            $about = $about && $this->saveAbout($login, Input::get('about'));
+        }
+        if (Input::get('avatar') !== Input::get('oldavatar')) {
+            $avatar = $avatar && $this->saveAvatar($login, Input::get('avatar'));
+        }
+        if (Input::get('gender') !== Input::get('oldgender')) {
+            $gender = $gender && $this->saveGender($login, Input::get('gender'));
+        }
+        if ($user->isAdmin() && Input::get('access') !== Input::get('oldaccess')) {
+            $access = $access && $this->saveAccess($login, Input::get('access'));
+        }
+        if ($name && $surname && $birthday && $about && $avatar && $access && $gender) {
+            return redirect()->back()->with('message', 'Saved');
+        } else {
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+    }
+
+    public function saveAccess($login, $access)
+    {
+        $user = new User($login);
 
         if (!$user->exist()) {
             return redirect()->back()->with('error', 'Something went wrong!');
@@ -94,55 +134,52 @@ class UserController extends Controller
         return redirect()->route('editUser', [$login])->with('message', 'Saved');
     }
 
-    public function saveName($login)
+    public function saveName($login, $name)
     {
         $user = new User($login);
-        $name = Input::get('name');
+
         if (!$user->exist()) {
-            return redirect()->back()->with('error', 'Something went wrong!');
+            return false;
         }
 
         $history = new EditHistory('user');
         $history->saveEdit($login, 'name', $user->getUserInfo()->name);
         $user->setAttribute(['name' => $name]);
 
-        return redirect()->route('editUser', [$login])->with('message', 'Saved');
+        return true;
     }
 
-    public function saveSurname($login)
+    public function saveSurname($login, $surname)
     {
-        $user    = new User($login);
-        $surname = Input::get('surname');
+        $user = new User($login);
         if (!$user->exist()) {
-            return redirect()->back()->with('error', 'Something went wrong!');
+            return false;
         }
 
         $history = new EditHistory('user');
         $history->saveEdit($login, 'surname', $user->getUserInfo()->surname);
         $user->setAttribute(['surname' => $surname]);
 
-        return redirect()->route('editUser', [$login])->with('message', 'Saved');
+        return true;
     }
 
-    public function saveAvatar($login)
+    public function saveAvatar($login, $avatar)
     {
-        $user   = new User($login);
-        $avatar = Input::get('avatar');
+        $user = new User($login);
         if (!$user->exist()) {
-            return redirect()->back()->with('error', 'Something went wrong!');
+            return false;
         }
 
         $history = new EditHistory('user');
         $history->saveEdit($login, 'avatar', $user->getUserInfo()->avatar);
         $user->setAttribute(['avatar' => $avatar]);
 
-        return redirect()->route('editUser', [$login])->with('message', 'Saved');
+        return true;
     }
 
-    public function saveBirthday($login)
+    public function saveBirthday($login, $birthday)
     {
-        $user     = new User($login);
-        $birthday = Input::get('birthday');
+        $user = new User($login);
         if (!$user->exist()) {
             return redirect()->back()->with('error', 'Something went wrong!');
         }
@@ -153,56 +190,53 @@ class UserController extends Controller
             $history->saveEdit($login, 'birthday', $user->getUserInfo()->birthday);
             $user->setAttribute(['birthday' => $birthday]);
 
-            return redirect()->route('editUser', [$login])->with('message', 'Saved');
+            return true;
         }
 
-        return redirect()->back()->with('error', 'Invalid date!');
+        return false;
 
     }
 
-    public function saveAbout($login)
+    public function saveAbout($login, $about)
     {
-        $user  = new User($login);
-        $about = Input::get('about');
+        $user = new User($login);
         if (!$user->exist()) {
-            return redirect()->back()->with('error', 'Something went wrong!');
+            return false;
         }
 
         $history = new EditHistory('user');
         $history->saveEdit($login, 'about', $user->getUserInfo()->about);
         $user->setAttribute(['about' => $about]);
 
-        return redirect()->route('editUser', [$login])->with('message', 'Saved');
+        return true;
     }
 
-    public function saveLocation($login)
+    public function saveLocation($login, $location)
     {
-        $user     = new User($login);
-        $location = Input::get('location');
+        $user = new User($login);
         if (!$user->exist()) {
-            return redirect()->back()->with('error', 'Something went wrong!');
+            return false;
         }
 
         $history = new EditHistory('user');
         $history->saveEdit($login, 'location', $user->getUserInfo()->location);
         $user->setAttribute(['location' => $location]);
 
-        return redirect()->route('editUser', [$login])->with('message', 'Saved');
+        return true;
     }
 
-    public function saveGender($login)
+    public function saveGender($login, $gender)
     {
-        $user   = new User($login);
-        $gender = strtolower(Input::get('gender'));
+        $user = new User($login);
         if (!$user->exist()) {
-            return redirect()->back()->with('error', 'Something went wrong!');
+            return false;
         }
 
         $history = new EditHistory('user');
         $history->saveEdit($login, 'gender', $user->getUserInfo()->gender);
         $user->setAttribute(['gender' => $gender]);
 
-        return redirect()->route('editUser', [$login])->with('message', 'Saved');
+        return true;
     }
 
     public function followOrNot($login)
