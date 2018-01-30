@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Support\Facades\Auth;
 use Mymovielist\User;
 
-class AuthModOrMe
+class AuthAdminOrMe
 {
     /**
      * Handle an incoming request.

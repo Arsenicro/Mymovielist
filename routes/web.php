@@ -72,7 +72,7 @@ Route::middleware('mod')->group(
     }
 );
 
-Route::middleware('authModOrMe')->group(
+Route::middleware('authAdminOrMe')->group(
     function () {
         //Edit user
         Route::get('/user/{login}/edit', 'UserController@edit')->name('editUser');

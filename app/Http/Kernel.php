@@ -59,7 +59,7 @@ class Kernel extends HttpKernel
         'mod' => \Mymovielist\Http\Middleware\Moderator::class,
         'auth' => \Mymovielist\Http\Middleware\AuthUser::class,
         'admin' => \Mymovielist\Http\Middleware\AuthAdmin::class,
-        'authModOrMe' => \Mymovielist\Http\Middleware\AuthModOrMe::class,
+        'authAdminOrMe' => \Mymovielist\Http\Middleware\AuthAdminOrMe::class,
 
     ];
 }
