@@ -54,6 +54,24 @@ class UserController extends Controller
         );
     }
 
+    public function list()
+    {
+        $users = User::getUsersInfo(['login', 'avatar']);
+        $users = ListController::sort(Input::get('order'), Input::get('sortby'), $users);
+        $get   = ListController::get();
+
+        return view(
+            'list', [
+                'result'     => $users,
+                'search'     => false,
+                'movieList'  => false,
+                'userList'   => true,
+                'personList' => false,
+                'get'        => $get
+            ]
+        );
+    }
+
     public function edit($login)
     {
         $user = new User($login);

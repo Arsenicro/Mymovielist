@@ -23,11 +23,9 @@ Route::get(
 );
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/movielist', 'ListController@movie')->name('movieList');
-Route::get('/personlist', 'ListController@person')->name('personList');
-Route::get('/userlist', 'ListController@user')->name('userList');
+Route::get('/movielist', 'MovieController@list')->name('movieList');
+Route::get('/personlist', 'PersonController@list')->name('personList');
+Route::get('/userlist', 'UserController@list')->name('userList');
 Route::get('/movie/{id}', 'MovieController@movie')->name('movie');
 Route::get('/movie/{mid}/review/{rid}', 'ReviewController@review')->name('review');
 Route::get('/person/{pid}', 'PersonController@person')->name('person');
@@ -82,6 +80,8 @@ Route::middleware('authAdminOrMe')->group(
 
 Route::middleware('auth')->group(
     function () {
+        Route::get('/home', 'RecommendationController@list')->name('home');
+
         //Movie
         Route::post('/movie/{id}/edit/savescore', 'MovieController@saveScore')->name('saveScore');
         Route::post('/movie/{id}/edit/likeornot', 'MovieController@likeOrNot')->name('likeOrNot');
@@ -95,12 +95,8 @@ Route::middleware('auth')->group(
         Route::post('/user/{login}/edit/followornot', 'UserController@followOrNot')->name('followOrNot');
 
         //Recommendation
-        Route::get('/deleterecommend/{id}', 'HomeController@deleteRecommend')->name('deleteRecommendation');
-        Route::get('/resetrecommend', 'HomeController@resetRecommend')->name('resetRecommend');
-
-        //Query
-        Route::get('/listofspecialmovies', 'HomeController@query')->name('query');
-
+        Route::get('/deleterecommend/{id}', 'RecommendationController@delete')->name('deleteRecommendation');
+        Route::get('/resetrecommend', 'RecommendationController@reset')->name('resetRecommend');
     }
 );
 

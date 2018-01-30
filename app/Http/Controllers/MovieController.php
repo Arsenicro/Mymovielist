@@ -83,6 +83,24 @@ class MovieController extends Controller
         );
     }
 
+    public function list()
+    {
+        $movies = Movie::getMoviesInfo(['id', 'title', 'score', 'photo', 'prod_date']);
+        $movies = ListController::sort(Input::get('order'), Input::get('sortby'), $movies);
+        $get    = ListController::get();
+
+        return view(
+            'list', [
+                'result'     => $movies,
+                'search'     => false,
+                'movieList'  => true,
+                'userList'   => false,
+                'personList' => false,
+                'get'        => $get
+            ]
+        );
+    }
+
     public function add()
     {
         $title = Input::get('movieTitle');

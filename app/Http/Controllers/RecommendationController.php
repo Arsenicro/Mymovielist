@@ -4,21 +4,13 @@ namespace Mymovielist\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Mymovielist\Movie;
-use Mymovielist\NEO4J\NEO4JUser;
 use Mymovielist\User;
 
-class HomeController extends Controller
+class RecommendationController extends Controller
 {
-    public function index()
+    public function list()
     {
-        $loggedIn = Auth::user() != null;
-
-        if (!$loggedIn) {
-            return redirect()->route('movieList');
-        }
-
-        $user = new User(Auth::user()->login);
-
+        $user       = new User(Auth::user()->login);
         $recommends = $user->recommend();
 
         $recommends = $recommends->map(
@@ -36,7 +28,7 @@ class HomeController extends Controller
         );
     }
 
-    public function deleteRecommend($mid)
+    public function delete($mid)
     {
 
         $user  = new User(Auth::user()->login);
@@ -46,23 +38,11 @@ class HomeController extends Controller
         return redirect()->route('home')->with('message', 'Removed from recommendations!');
     }
 
-    public function resetRecommend()
+    public function reset()
     {
         $user = new User(Auth::user()->login);
         $user->resetDisliked();
 
         return redirect()->route('home')->with('message', 'Restarted recommendations!');
-    }
-
-    public function query()
-    {
-        $results = NEO4JUser::myQuery(Auth::user()->login);
-        $results = $results->map(
-            function ($key) {
-                return $key->getMovieInfo();
-            }
-        );
-
-        return view('query', ['movies' => $results]);
     }
 }

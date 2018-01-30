@@ -20,6 +20,10 @@ class AuthUser
             return $next($request);
         }
 
-        return \redirect()->route('login')->with('error', "You are not logged in!");
+        if ($request->route()->uri() == 'home') {
+            return \redirect()->route('movieList');
+        } else {
+            return \redirect()->back()->with('error', "You are not logged in!");
+        }
     }
 }

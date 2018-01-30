@@ -301,6 +301,16 @@ class User
         return !$this->watchedMovie($movie) && !$this->isMovieDisliked($movie);
     }
 
+    public function recommendByIdolsOfMyFollowedInCast()
+    {
+        return NEO4JUser::myQuery($this->login)->unique()->filter(
+            function ($item) {
+                $movie = new Movie($item->mid);
+                return $this->canRecommend($movie);
+            }
+        );
+    }
+
     public function recommendByLikedAndGenres()
     {
         return $this->getLikedMovies()->map(
@@ -351,7 +361,10 @@ class User
 
     public function recommend()
     {
-        return $this->recommendByFollowed()->merge($this->recommendByLikedAndGenres())->merge($this->recommendByLikedPerson())->unique()->values();
+        return $this->recommendByFollowed()->merge($this->recommendByLikedAndGenres())
+            ->merge($this->recommendByLikedPerson())
+            ->merge($this->recommendByIdolsOfMyFollowedInCast())
+            ->unique()->values();
     }
 
 

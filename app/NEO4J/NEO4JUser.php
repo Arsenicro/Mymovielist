@@ -55,7 +55,7 @@ class NEO4JUser extends NeoEloquent
     public static function myQuery($login)
     {
         $client      = DB::connection('neo4j')->getClient();
-        $queryString = "MATCH (u1)-[:FOLLOWED_BY]->(u2)-[:IS_FAN]->(p)-[:STAR]->(m) WHERE u1.login=\"{$login}\" RETURN (m)";
+        $queryString = "MATCH (u1)<-[:FOLLOWED_BY]-(u2)-[:IS_FAN]->(p)-[:STAR]->(m) WHERE u1.login=\"{$login}\" RETURN (m)";
         $query       = new Query($client, $queryString, array('userId' => $login));
         $result      = $query->getResultSet();
         $midArray    = [];
@@ -66,7 +66,7 @@ class NEO4JUser extends NeoEloquent
         $collection = collect($midArray)->map(
             function ($key) {
                 $movie = new Movie($key);
-                return $movie;
+                return $movie->getNeo4jMovie();
             }
         );
 
