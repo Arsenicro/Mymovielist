@@ -21,8 +21,11 @@
                         <td class="text-left" width="10%">
                             <img src="{{ $userinfo->avatar }}" width="50px" height="50px">
                         </td>
-                        <td class="text-center" style="vertical-align: middle" width="60%">
+                        <td class="text-center" style="vertical-align: middle" width="50%">
                             <a href="{{ route('user',[$userinfo->login]) }}">{{ $userinfo->login }}</a>
+                        </td>
+                        <td class="text-right" style="vertical-align: middle" width="10%">
+                            <b>{{ $score }}</b>
                         </td>
                         <td class="text-right" style="vertical-align: middle" width="20%">
                             {{ $reviewinfo->created_at }}

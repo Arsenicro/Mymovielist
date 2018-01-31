@@ -29,13 +29,19 @@ class ReviewController extends Controller
         $user       = new User($user->login);
         $userInfo   = $user->getUserInfo();
         $reviewInfo = $review->getReviewInfo();
+        $score      = $user->getUserScore($movie) ?? 'N/A';
+
+        if ($score !== 'N/A') {
+            $score .= "/10";
+        }
 
         return view(
             'review',
             [
                 'movieinfo'  => $movieInfo,
                 'userinfo'   => $userInfo,
-                'reviewinfo' => $reviewInfo
+                'reviewinfo' => $reviewInfo,
+                'score'      => $score
             ]
         );
     }
@@ -69,7 +75,7 @@ class ReviewController extends Controller
             }
         }
 
-        return redirect(route('movie', [$mid]))->with('message', 'Something went wrong');
+        return redirect(route('movie', [$mid]))->with('error', 'Something went wrong');
 
     }
 
