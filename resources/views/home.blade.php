@@ -9,7 +9,7 @@
     </div>
     <ul class="list-group">
         @foreach($recommends as $recommend)
-            <li class="list-group-item"><img src="{{ $recommend->photo }}" width="60px" height="60px">
+            <li class="list-group-item"><img src="{{ $recommend->photo }}" width="50px" height="75px">
                 <a href="{{ route('movie',[$recommend->id]) }}">{{ $recommend->title }}</a>
                 <span class="badge">
                     <a href="{{ route('deleteRecommendation',[$recommend->id]) }}">

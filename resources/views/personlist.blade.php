@@ -32,7 +32,7 @@
             @foreach($persons as $person)
                 <tr>
                     <th>
-                        <img src="{{ $person->photo }}" width="120px" height="120px" style="float: left; margin-right: 20px">
+                        <img src="{{ $person->photo }}" width="100px" height="150px" style="float: left; margin-right: 20px">
                         <a href="{{ route('person',[$person->id]) }}">{{ $person->name }}</a>
                     </th>
                     <th style="text-align: center">

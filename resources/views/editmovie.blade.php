@@ -148,7 +148,7 @@
                     <table class="table">
                         <tr>
                             <th style="vertical-align: middle" width="45%">
-                                <img src="{{ $cast['info']->photo }}" width="50px" height="50px">
+                                <img src="{{ $cast['info']->photo }}" width="50px" height="75px">
 
                                 {{ $cast['role'] }}
 

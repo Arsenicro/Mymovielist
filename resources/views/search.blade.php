@@ -29,8 +29,9 @@
             @foreach($genres as $genre)
                 @if($genre == $inputGenre)
                     <option selected>{{ $genre }}</option>
+                @else
+                    <option>{{ $genre }}</option>
                 @endif
-                <option>{{ $genre }}</option>
             @endforeach
         </select>
         @if($watched)

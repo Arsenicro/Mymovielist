@@ -46,7 +46,10 @@ class PersonController extends Controller
             }
         );
 
-        $user = new User(Auth::user()->login);
+        if (Auth::user() != null) {
+            $user  = new User(Auth::user()->login);
+            $liked = $person->likedBy($user);
+        }
 
 
         return view(
@@ -55,7 +58,7 @@ class PersonController extends Controller
                 'played'   => $played,
                 'directed' => $directed,
                 'wrote'    => $wrote,
-                'liked'    => $person->likedBy($user)
+                'liked'    => $liked ?? false
             ]
         );
 

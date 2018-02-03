@@ -19,12 +19,18 @@ class NEO4JUser extends NeoEloquent
 
     public function followers()
     {
-        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JUser', 'FOLLOWED_BY');
+        return $this->hasMany('Mymovielist\NEO4J\NEO4JUser', 'FOLLOWED_BY');
     }
 
     public function followed()
     {
-        return $this->hasMany('Mymovielist\NEO4J\NEO4JUser', 'FOLLOWED_BY');
+        return $this->belongsToMany('Mymovielist\NEO4J\NEO4JUser', 'FOLLOWED_BY');
+    }
+
+    public function edgeFollowedDirection($user, $direction)
+    {
+        $edge = $this->followed()->getEdge();
+        return $edge->newFinder()->first($this, $user, 'FOLLOWED_BY', $direction);
     }
 
     public function wroteReview()
@@ -51,6 +57,7 @@ class NEO4JUser extends NeoEloquent
     {
         return $this->hasMany('Mymovielist\NEO4J\NEO4JMovie', 'SCORED');
     }
+
 
     public static function myQuery($login)
     {

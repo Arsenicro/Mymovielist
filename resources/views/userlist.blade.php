@@ -14,7 +14,7 @@
             @foreach($users as $user)
                 <tr>
                     <th>
-                        <img src="{{ $user->avatar }}" width="120px" height="120px" style="float: left; margin-right: 20px">
+                        <img src="{{ $user->avatar }}" width="100px" height="150px" style="float: left; margin-right: 20px">
                         <a href="{{ route('user',[$user->login]) }}">{{ $user->login }}</a>
                     </th>
                 </tr>

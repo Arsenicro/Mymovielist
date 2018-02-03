@@ -103,13 +103,13 @@ class User
     {
         $user = $this->getNeo4jUser();
 
-        $user->followers()->save($followedUser->getNeo4jUser(), ["since" => Carbon::now()->toDateString()]);
+        $user->followed()->save($followedUser->getNeo4jUser(), ["since" => Carbon::now()->toDateString()]);
     }
 
     public function unFollow(User $unFollowUser)
     {
         if ($this->following($unFollowUser)) {
-            $edge = $this->getNeo4jUser()->followers()->edge($unFollowUser->getNeo4jUser());
+            $edge = $this->getNeo4jUser()->edgeFollowedDirection($unFollowUser->getNeo4jUser(),'in');
             $edge->delete();
         }
     }
@@ -117,7 +117,8 @@ class User
     public function following(User $followingUser)
     {
         $user = $this->getNeo4jUser();
-        return $user->followed()->edge($followingUser->getNeo4jUser());
+        $edge = $user->edgeFollowedDirection($followingUser->getNeo4jUser(),'in');
+        return $edge !== null;
     }
 
     public function getFollowers()

@@ -28,7 +28,7 @@
                         @foreach($reviews as $review)
                             <tr>
                                 <th class="text-right" width="10%">
-                                    <img src="{{ $review['user']->avatar }}" width="25px" height="25px">
+                                    <img src="{{ $review['user']->avatar }}" width="20px" height="30px">
                                 </th>
                                 <th class="text-left" width="80%">
                                     <a href="{{ route('user',[$review['user']->login]) }}">{{ $review['user']->login }}</a>
@@ -135,7 +135,7 @@
                         @foreach($casts as $cast)
                             <tr>
                                 <th>
-                                    <img src="{{ $cast['info']->photo }}" width="50px" height="50px"> {{ $cast['role'] }}
+                                    <img src="{{ $cast['info']->photo }}" width="50px" height="75px"> {{ $cast['role'] }}
                                 </th>
                                 <th class="text-center" style="vertical-align: middle">
                                     <a href="{{ route('person',[$cast['info']->id]) }}">{{ $cast['info']->name }} {{ $cast['info']->surname }}</a>

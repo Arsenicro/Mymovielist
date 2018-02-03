@@ -27,14 +27,12 @@
             </td>
             <td class="text-center" valign="top" width="90%">
                 <strong style="font-size: 30px; text-align: center;">
-                    @if($info->gender == "male")
+                    @if($info->gender == "Male")
                         <span class="fa fa-mars" style="color:cadetblue" title="male"></span>
-                    @elseif($info->gender == "female")
+                    @elseif($info->gender == "Female")
                         <span class="fa fa-venus" style="color:cadetblue" title="female"></span>
-                    @elseif($info->gender == "other")
-                        <span class="fa fa-genderless" style="color:cadetblue" title="other"></span>
                     @else
-                        <span class="fa fa-genderless" style="color:cadetblue"></span>
+                        <span class="fa fa-genderless" style="color:cadetblue" title="other"></span>
                     @endif
                     {{ $info->login }} <a href="{{ route('editUser',[$info->login]) }}"><span class="glyphicon glyphicon-edit"
                                                                                               style="margin-left: 10px"></span></a>
@@ -71,7 +69,7 @@
                                         href="{{ route('movie',[$review['movie']->id]) }}">{{ $review['movie']->title }}</a>
                             </th>
                             <th class="text-center" style="vertical-align: middle" width="10%">
-                                {{ $review['score'] }}
+                                {{ $review['score'] }}/10
                             </th>
                             <th class="text-center" style="vertical-align: middle">
                                 <a href="{{ route('review',[$review['movie']->id,$review['info']->id]) }}"><span
