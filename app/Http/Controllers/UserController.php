@@ -58,7 +58,6 @@ class UserController extends Controller
     {
         $users = User::getUsersInfo(['login', 'avatar']);
         $users = ListController::sort(Input::get('order'), Input::get('sortby'), $users);
-        $get   = ListController::get();
 
         return view(
             'list', [
@@ -67,7 +66,7 @@ class UserController extends Controller
                 'movieList'  => false,
                 'userList'   => true,
                 'personList' => false,
-                'get'        => $get
+                'get'        => ""
             ]
         );
     }

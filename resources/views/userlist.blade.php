@@ -3,10 +3,10 @@
             <tr>
                 <th>
                     Login
-                    <a href="?sortby=name&order=asc{{ $get }}">
+                    <a href="?sortby=login&order=asc{{ $get }}">
                         <span class="glyphicon glyphicon-sort-by-order-alt"></span>
                     </a>
-                    <a href="?sortby=name&order=desc{{ $get }}">
+                    <a href="?sortby=login&order=desc{{ $get }}">
                         <span class="glyphicon glyphicon-sort-by-order"></span>
                     </a>
                 </th>

@@ -19,17 +19,4 @@ class ListController extends Controller
         }
         return $collection;
     }
-
-    public static function get()
-    {
-        $get   = "";
-        $input = Input::get();
-        foreach ($input as $i => $item) {
-            if ($i !== "sortby" && $i !== "order") {
-                $get .= "&" . $i . "=" . $item;
-            }
-        }
-
-        return $get;
-    }
 }

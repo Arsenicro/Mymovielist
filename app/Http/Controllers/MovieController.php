@@ -87,7 +87,6 @@ class MovieController extends Controller
     {
         $movies = Movie::getMoviesInfo(['id', 'title', 'score', 'photo', 'prod_date']);
         $movies = ListController::sort(Input::get('order'), Input::get('sortby'), $movies);
-        $get    = ListController::get();
 
         return view(
             'list', [
@@ -96,7 +95,7 @@ class MovieController extends Controller
                 'movieList'  => true,
                 'userList'   => false,
                 'personList' => false,
-                'get'        => $get
+                'get'        => ""
             ]
         );
     }

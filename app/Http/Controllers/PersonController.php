@@ -77,7 +77,6 @@ class PersonController extends Controller
         );
 
         $persons = ListController::sort(Input::get('order'), Input::get('sortby'), $persons);
-        $get     = ListController::get();
 
         return view(
             'list', [
@@ -86,7 +85,7 @@ class PersonController extends Controller
                 'movieList'  => false,
                 'userList'   => false,
                 'personList' => true,
-                'get'        => $get
+                'get'        => ""
             ]
         );
     }
