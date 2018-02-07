@@ -70,7 +70,7 @@ class LogController extends Controller
         $editUser    = new EditHistory('user');
         $searchStats = new SearchStats();
 
-        $date = Carbon::now()->subDays(30);
+        $date = Carbon::now()->subDays(env('DELETE_OLDER_THAN_DAYS',30));
 
         $editMovies->deleteOlderThan($date);
         $editPersons->deleteOlderThan($date);

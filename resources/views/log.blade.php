@@ -16,7 +16,7 @@
         </a>
         <form class="form-inline" action="{{ route('clearLogs') }}" style="display: inline" method="post">
             {{ csrf_field() }}
-            <button class="btn btn-danger" type="submit">Delete older than 30 days</button>
+            <button class="btn btn-danger" type="submit">Delete older than {{ env('DELETE_OLDER_THAN_DAYS',30) }} days</button>
         </form>
     </div>
     <div style="margin-top: 50px">
